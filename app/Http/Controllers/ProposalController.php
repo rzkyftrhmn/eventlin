@@ -10,7 +10,7 @@ class ProposalController extends Controller
 {
     public function index()
     {
-        $proposals = Proposal::all();
+        $proposals = Proposal::paginate(5); // Tampil 5 data per halaman
         return view('proposals.index', compact('proposals'));
     }
 
@@ -56,8 +56,9 @@ class ProposalController extends Controller
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil disimpan!');
     }
 
-    public function show(Proposal $proposal)
+    public function show($id)
     {
+        $proposal = Proposal::findOrFail($id);
         return view('proposals.show', compact('proposal'));
     }
 
@@ -117,4 +118,17 @@ class ProposalController extends Controller
         $proposal->delete();
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil dihapus.');
     }
+
+    public function search(Request $request)
+{
+    $keyword = $request->input('keyword');
+    $proposals = Proposal::where('nama_acara', 'like', "%$keyword%")
+        ->orWhere('judul_proposal', 'like', "%$keyword%")
+        ->paginate(5)
+        ->appends(['keyword' => $keyword]);
+
+    return view('proposals.index', compact('proposals'));
+}
+
+
 }

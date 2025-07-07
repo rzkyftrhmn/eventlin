@@ -1,38 +1,42 @@
 @extends('layouts.app')
+
 @section('content')
-<div class="container">
-    <h1>Data Proposal</h1>
+    <h1>Daftar Proposal</h1>
 
     @if (session('success'))
-        <div>{{ session('success') }}</div>
+        <div style="color: green; margin-bottom: 10px;">
+            {{ session('success') }}
+        </div>
     @endif
-    
-    <a href="{{ route('proposals.create') }}">Tambah Proposal</a>
-    <h1>PROPOSAL</h1>
-    @if($proposals->isEmpty())
-        <p>Belum ada proposal.</p>
-    @else
-        <table border="1" cellpadding="10">
-            <thead>
-                <tr>
-                    <th>Nama Acara</th>
-                    <th>Jenis Acara</th>
-                    <th>Status</th>
-                    <th>File</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($proposals as $proposal)
+
+    <form action="{{ route('proposals.search') }}" method="GET" style="margin-bottom: 20px;">
+        <input type="text" name="keyword" placeholder="Cari Proposal..." value="{{ request('keyword') }}" required>
+        <button type="submit">Cari</button>
+        <a href="{{ route('proposals.index') }}" style="margin-left: 10px;">Reset</a>
+    </form>
+
+    <a href="{{ route('proposals.create') }}" style="margin-bottom: 15px; display: inline-block;">Tambah Proposal</a>
+
+    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Nama Acara</th>
+                <th>Judul Proposal</th>
+                <th>Status</th>
+                <th>File Proposal</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($proposals as $proposal)
                 <tr>
                     <td>{{ $proposal->nama_acara }}</td>
-                    <td>{{ $proposal->jenis_acara }}</td>
+                    <td>{{ $proposal->judul_proposal }}</td>
                     <td>{{ $proposal->status_proposal }}</td>
+                    <td><a href="{{ asset('proposals/' . $proposal->file_proposal) }}" target="_blank">Lihat</a></td>
                     <td>
-                        <a href="{{ asset($proposal->file_proposal) }}" target="_blank">Lihat File</a>
-                    </td>
-                    <td>
-                        <a href="{{ route('proposals.edit', $proposal->id_proposal) }}">Edit</a>
+                        <a href="{{ route('proposals.show', $proposal->id_proposal) }}">Detail</a> |
+                        <a href="{{ route('proposals.edit', $proposal->id_proposal) }}">Edit</a> |
                         <form action="{{ route('proposals.destroy', $proposal->id_proposal) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
@@ -40,9 +44,15 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
-</div>
+            @empty
+                <tr>
+                    <td colspan="5" style="text-align: center;">Data tidak ditemukan</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        {{ $proposals->links() }}
+    </div>
 @endsection
