@@ -18,15 +18,14 @@
         <a href="{{ asset('storage/' . $proposal->file_proposal) }}" target="_blank">Lihat File Lama</a><br>
     @endif
 
-    <label>Tanggal Pengajuan:</label>
-    <input type="date" name="tanggal_pengajuan" value="{{ old('tanggal_pengajuan', $proposal->tanggal_pengajuan ?? '') }}" required><br>
-
     <label>Status Proposal:</label>
     <select name="status_proposal" required>
-        <option value="Diajukan" {{ (old('status_proposal', $proposal->status_proposal ?? '') == 'Diajukan') ? 'selected' : '' }}>Diajukan</option>
-        <option value="Disetujui" {{ (old('status_proposal', $proposal->status_proposal ?? '') == 'Disetujui') ? 'selected' : '' }}>Disetujui</option>
-        <option value="Ditolak" {{ (old('status_proposal', $proposal->status_proposal ?? '') == 'Ditolak') ? 'selected' : '' }}>Ditolak</option>
-    </select><br>
+        <option value="">-- Pilih Status --</option>
+        <option value="Diajukan" {{ old('status_proposal', $proposal->status_proposal ?? '') == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
+    </select></br>
+
+    <label>Tanggal Pengajuan:</label>
+    <input type="date" name="tanggal_pengajuan" value="{{ old('tanggal_pengajuan', $proposal->tanggal_pengajuan ?? '') }}" required><br>
 
     <label>Estimasi Peserta:</label>
     <input type="number" name="estimasi_peserta" value="{{ old('estimasi_peserta', $proposal->estimasi_peserta ?? '') }}" required><br>

@@ -9,12 +9,17 @@
         </div>
     @endif
 
-    <form action="{{ route('proposals.search') }}" method="GET" style="margin-bottom: 20px;">
-        <input type="text" name="keyword" placeholder="Cari Proposal..." value="{{ request('keyword') }}" required>
-        <button type="submit">Cari</button>
-        <a href="{{ route('proposals.index') }}" style="margin-left: 10px;">Reset</a>
+    <form action="{{ route('proposals.index') }}" method="GET" style="margin-bottom: 15px;">
+        <select name="status_filter">
+            <option value="">-- Filter Status --</option>
+            <option value="Diajukan" {{ request('status_filter') == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
+            <option value="Disetujui" {{ request('status_filter') == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
+            <option value="Ditolak" {{ request('status_filter') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+        </select>
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Proposal...">
+        <button type="submit">Terapkan</button>
     </form>
-
+    
     <a href="{{ route('proposals.create') }}" style="margin-bottom: 15px; display: inline-block;">Tambah Proposal</a>
 
     <table border="1" cellpadding="10" cellspacing="0" style="width: 100%;">

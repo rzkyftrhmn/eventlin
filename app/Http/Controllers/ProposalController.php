@@ -8,10 +8,24 @@ use Illuminate\Support\Facades\Storage;
 
 class ProposalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $proposals = Proposal::paginate(5); // Tampil 5 data per halaman
-        return view('proposals.index', compact('proposals'));
+        $search = $request->input('search');
+        $status = $request->input('status_filter');
+
+        if ($search) {
+            $proposals = Proposal::where('nama_acara', 'like', "%{$search}%")
+                                 ->orWhere('judul_proposal', 'like', "%{$search}%")
+                                 ->paginate(5);
+
+        } elseif ($status) {
+            $proposals = Proposal::where('status_proposal', $status)
+                                 ->paginate(5); 
+        } else {
+            $proposals = Proposal::paginate(5); 
+        }
+
+        return view('proposals.index', compact('proposals', 'search'));
     }
 
     public function create()
@@ -58,7 +72,7 @@ class ProposalController extends Controller
 
     public function show($id)
     {
-        $proposal = Proposal::findOrFail($id);
+        $proposal = Proposal::with(['persetujuans','rundowns'])->findOrFail($id);
         return view('proposals.show', compact('proposal'));
     }
 
@@ -129,6 +143,5 @@ class ProposalController extends Controller
 
     return view('proposals.index', compact('proposals'));
 }
-
 
 }

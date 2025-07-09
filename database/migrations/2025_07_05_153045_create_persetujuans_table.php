@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_proposal');
             $table->foreign('id_proposal')->references('id_proposal')->on('proposals')->onDelete('cascade');
             $table->string('pihak_penyetuju');
-            $table->enum('status_persetujuan', ['Disetujui', 'Ditolak']);
+            $table->enum('status_persetujuan', ['Disetujui', 'Ditolak'])->nullable();
             $table->date('tanggal_persetujuan');
             $table->timestamps();
         });

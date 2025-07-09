@@ -14,7 +14,7 @@ class Proposal extends Model
 
     public function persetujuans()
     {
-        return $this->hasMany(Persetujuan::class, 'id_proposal', 'id_proposal');
+        return $this->hasOne(Persetujuan::class, 'id_proposal', 'id_proposal');
     }
 
     public function rundowns()

@@ -10,6 +10,7 @@ class Persetujuan extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $primaryKey = 'id_persetujuan';
 
     public function proposal()
     {
