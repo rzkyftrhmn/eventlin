@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailRundown;
+use App\Models\Divisi;
 use App\Models\Rundown;
 use Illuminate\Http\Request;
 
@@ -11,49 +12,55 @@ class DetailRundownController extends Controller
     public function create($id_rundown)
     {
         $rundown = Rundown::findOrFail($id_rundown);
-        return view('detail_rundowns.create', compact('rundown'));
+        $divisis = Divisi::all();
+        return view('detail_rundowns.create', compact('rundown', 'divisis'));
     }
     
     public function store(Request $request, $id_rundown)
     {
         $request->validate([
-            'nama_kegiatan' => 'required',
+            'judul_rundown' => 'required|string|max:255',
+            'id_divisi' => 'required|exists:divisis,id_divisi',
             'jam_awal' => 'required',
             'jam_akhir' => 'required',
-            'detail_acara' => 'required',
+            'detail_kegiatan' => 'required|string',
         ]);
 
         DetailRundown::create([
             'id_rundown' => $id_rundown,
             'id_divisi' => $request->id_divisi,
-            'nama_kegiatan' => $request->nama_kegiatan,
+            'judul_rundown' => $request->judul_rundown,
             'jam_awal' => $request->jam_awal,
             'jam_akhir' => $request->jam_akhir,
-            'detail_acara' => $request->detail_acara,
+            'detail_kegiatan' => $request->detail_kegiatan,
         ]);
 
-        return redirect()->route('rundowns.show', $id_rundown)->with('success', 'Detail rundown berhasil ditambahkan.');
+        return redirect()->route('rundowns.show', $id_rundown)
+                         ->with('success', 'Detail rundown berhasil ditambahkan.');
     }
     
     public function edit($id)
     {
-        $detail = DetailRundown::findOrFail($id);
-        return view('detail_rundowns.edit', compact('detail'));
+        $detailRundown = DetailRundown::with('divisi')->findOrFail($id);
+        $divisis = Divisi::all();
+        return view('detail_rundowns.edit', compact('detailRundown','divisis'));
     }
 
     public function update(Request $request, $id)
     {
+        $detailRundown = DetailRundown::findOrFail($id);
+
         $request->validate([
-            'nama_kegiatan' => 'required',
+            'id_divisi' => 'required|exists:divisis,id_divisi',
+            'judul_rundown' => 'required|string|max:255',
             'jam_awal' => 'required',
             'jam_akhir' => 'required',
-            'detail_acara' => 'required',
+            'detail_kegiatan' => 'required|string'
         ]);
 
-        $detail = DetailRundown::findOrFail($id);
-        $detail->update($request->all());
+        $detailRundown->update($request->all());
 
-        return redirect()->route('rundowns.show', $detail->id_rundown)->with('success', 'Detail rundown berhasil diperbarui.');
+        return redirect()->route('rundowns.show', $detailRundown->id_rundown)->with('success', 'Detail rundown berhasil diperbarui.');
     }
 
     public function destroy($id)
