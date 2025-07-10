@@ -10,7 +10,7 @@ class Divisi extends Model
     use HasFactory;
 
     protected $guarded = [];
-
+    protected $primaryKey = 'id_divisi'; 
     public function detailRundowns()
     {
         return $this->hasMany(DetailRundown::class, 'id_divisi', 'id_divisi');
