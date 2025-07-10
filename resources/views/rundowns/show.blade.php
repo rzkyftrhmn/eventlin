@@ -27,10 +27,10 @@
         <tbody>
             @forelse ($rundown->detailRundowns as $detail)
                 <tr>
-                    <td>{{ $detail->nama_kegiatan }}</td>
+                    <td>{{ $detail->judul_rundown }}</td>
                     <td>{{ $detail->jam_awal }}</td>
                     <td>{{ $detail->jam_akhir }}</td>
-                    <td>{{ $detail->detail_acara }}</td>
+                    <td>{{ $detail->detail_kegiatan }}</td>
                     <td>{{ $detail->divisi->nama_divisi ?? '-' }}</td>
                     <td>
                         <a href="{{ route('detail-rundowns.edit', $detail->id_detail_rundown) }}">Edit</a> |

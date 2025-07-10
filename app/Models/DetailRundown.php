@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DetailRundown extends Model
 {
     use HasFactory;
-
+    protected $primaryKey="id_detail_rundown";
     protected $guarded = [];
 
     public function rundown()

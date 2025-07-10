@@ -30,6 +30,7 @@ Route::post('/rundowns/{id_rundown}/detail-rundown', [DetailRundownController::c
 Route::get('/detail-rundowns/{id}/edit', [DetailRundownController::class, 'edit'])->name('detail-rundowns.edit');
 Route::put('/detail-rundowns/{id}', [DetailRundownController::class, 'update'])->name('detail-rundowns.update');
 Route::delete('/detail-rundowns/{id}', [DetailRundownController::class, 'destroy'])->name('detail-rundowns.destroy');
+
 // Detail Rundown Routes
 // Route::get('/rundowns/{id_rundown}/detail-rundown/create', [DetailRundownController::class, 'create'])->name('detail-rundown.create');
 // Route::post('/rundowns/{id_rundown}/detail-rundown', [DetailRundownController::class, 'store'])->name('detail-rundown.store');
