@@ -10,7 +10,8 @@ class Panitia extends Model
     use HasFactory;
 
     protected $guarded = [];
-
+    protected $table = 'panitia';
+    protected $primaryKey = 'id_panitia';
     public function divisi()
     {
         return $this->belongsTo(Divisi::class, 'id_divisi', 'id_divisi');

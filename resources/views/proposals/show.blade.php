@@ -62,5 +62,31 @@
         @endif
     @endif
     <hr>
+    <h3>Panitia Acara</h3>
+        <a href="{{ route('panitia.create', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Panitia</a><br>
+        <a href="{{ route('panitia.index', ['id_proposal' => $proposal->id_proposal]) }}">Lihat Semua</a>
+    @if($proposal->panitia->count() > 0)   
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Jabatan</th>
+                    <th>Divisi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($proposal->panitia->take(5) as $p)
+                <tr>
+                    <td>{{ $p->nama_panitia }}</td>
+                    <td>{{ $p->jabatan_panitia }}</td>
+                    <td>{{ $p->divisi->nama_divisi ?? '-' }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <p>Belum ada panitia untuk acara ini.</p>
+    @endif
+    <hr>
     <a href="{{ route('proposals.index') }}">Kembali</a>
 @endsection

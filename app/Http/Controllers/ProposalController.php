@@ -72,7 +72,7 @@ class ProposalController extends Controller
 
     public function show($id)
     {
-        $proposal = Proposal::with(['persetujuans','rundowns'])->findOrFail($id);
+        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi'])->findOrFail($id);
         return view('proposals.show', compact('proposal'));
     }
 
