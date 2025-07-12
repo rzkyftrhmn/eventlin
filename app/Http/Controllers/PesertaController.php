@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Divisi;
-use App\Models\Panitia;
 use App\Models\Peserta;
 use App\Models\Proposal;
-use Illuminate\Validation\Rule as ValidationRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
-class PanitiasController extends Controller
+class PesertaController extends Controller
 {
-       public function index()
+     public function index()
     {
         $pesertas = Peserta::all();
         return view('peserta.index', compact('pesertas'));
@@ -32,15 +28,7 @@ class PanitiasController extends Controller
             'id_proposal' => 'required|exists:proposals,id_proposal',
             'nama_peserta' => 'required|string|max:255',
             'email' => 'required|email|unique:pesertas,email',
-            'password' => [
-                'required',
-                'string',
-                'confirmed',
-                'min:8',
-                'regex:/[a-z]/',   // huruf kecil
-                'regex:/[A-Z]/',   // huruf besar
-                'regex:/[0-9]/',   // angka
-            ],
+            'password' => 'required|string|confirmed|min:6',
             'status_pendaftaran' => 'required|in:Diterima,Ditolak',
             'tanggal_pendaftaran' => 'required|date',
         ]);
@@ -72,20 +60,8 @@ class PanitiasController extends Controller
         $request->validate([
             'id_proposal' => 'required|exists:proposals,id_proposal',
             'nama_peserta' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'email',
-                Validator::unique('pesertas', 'email')->ignore($peserta->nim, 'nim'),
-            ],
-            'password' => [
-                'nullable',
-                'string',
-                'confirmed',
-                'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-            ],
+            'email' => 'required|email|unique:pesertas,email,' . $peserta->nim . ',nim',
+            'password' => 'nullable|string|confirmed|min:6',
             'status_pendaftaran' => 'required|in:Diterima,Ditolak',
             'tanggal_pendaftaran' => 'required|date',
         ]);
@@ -100,7 +76,7 @@ class PanitiasController extends Controller
 
         $peserta->update($data);
 
-        return redirect()->route('peserta.index')->with('success', 'Data peserta berhasil diperbarui.');
+        return redirect()->route('peserta.index')->with('success', 'Peserta berhasil diperbarui.');
     }
 
     public function destroy($nim)
@@ -108,5 +84,4 @@ class PanitiasController extends Controller
         Peserta::destroy($nim);
         return redirect()->route('peserta.index')->with('success', 'Peserta berhasil dihapus.');
     }
-    
 }
