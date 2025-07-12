@@ -12,6 +12,10 @@ class Panitia extends Model
     protected $guarded = [];
     protected $table = 'panitia';
     protected $primaryKey = 'id_panitia';
+    
+    protected $hidden = [
+        'password',
+    ];
     public function divisi()
     {
         return $this->belongsTo(Divisi::class, 'id_divisi', 'id_divisi');

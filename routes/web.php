@@ -7,6 +7,7 @@ use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\RundownController;
 use App\Http\Controllers\PanitiasController;
+use App\Http\Controllers\PesertaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -45,13 +46,6 @@ Route::post('/proposals/{id_proposal}/panitia', [PanitiasController::class, 'sto
 Route::get('/panitia/{id_panitia}/edit', [PanitiasController::class, 'edit'])->name('panitia.edit');
 Route::put('/panitia/{id_panitia}', [PanitiasController::class, 'update'])->name('panitia.update');
 Route::delete('/panitia/{id_panitia}', [PanitiasController::class, 'destroy'])->name('panitia.destroy');
-// Detail Rundown Routes
-// Route::get('/rundowns/{id_rundown}/detail-rundown/create', [DetailRundownController::class, 'create'])->name('detail-rundown.create');
-// Route::post('/rundowns/{id_rundown}/detail-rundown', [DetailRundownController::class, 'store'])->name('detail-rundown.store');
-// Route::get('/detail-rundown/{id}/edit', [DetailRundownController::class, 'edit'])->name('detail-rundown.edit');
-// Route::put('/detail-rundown/{id}', [DetailRundownController::class, 'update'])->name('detail-rundown.update');
-// Route::delete('/detail-rundown/{id}', [DetailRundownController::class, 'destroy'])->name('detail-rundown.destroy');
 
-
-
+Route::resource('peserta', PesertaController::class);
 
