@@ -1,61 +1,62 @@
-@csrf
+<form action="{{ isset($peserta) ? route('peserta.update', $peserta->nim) : route('peserta.store', ['id_proposal' => $proposal->id_proposal]) }}" method="POST">
+    @csrf
+    @if(isset($peserta))
+        @method('PUT')
+    @endif
+    @if ($errors->any())
+        <div style="color: red; font-weight: bold;">
+            <p>Validasi gagal:</p>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <div>
+        <label for="nim">NIM</label>
+        <input type="text" name="nim" id="nim" value="{{ old('nim', $peserta->nim ?? '') }}" {{ isset($peserta) ? 'readonly' : 'required' }}>
+        @error('nim')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    <div>
+        <label for="nama_peserta">Nama Peserta</label>
+        <input type="text" name="nama_peserta" id="nama_peserta" value="{{ old('nama_peserta', $peserta->nama_peserta ?? '') }}" required>
+        @error('nama_peserta')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
 
-<div>
-    <label>NIM:</label>
-    <input type="text" name="nim" value="{{ old('nim', $peserta->nim ?? '') }}" {{ isset($peserta) ? 'readonly' : '' }}>
-    @error('nim') <small style="color:red">{{ $message }}</small> @enderror
-</div>
+    <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" value="{{ old('email', $peserta->email ?? '') }}" required>
+        @error('email')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
 
-<div>
-    <label>Proposal:</label>
-    <select name="id_proposal">
-        <option value="">-- Pilih Proposal --</option>
-        @foreach($proposals as $proposal)
-            <option value="{{ $proposal->id_proposal }}" {{ old('id_proposal', $peserta->id_proposal ?? '') == $proposal->id_proposal ? 'selected' : '' }}>
-                {{ $proposal->nama_kegiatan }}
-            </option>
-        @endforeach
-    </select>
-    @error('id_proposal') <small style="color:red">{{ $message }}</small> @enderror
-</div>
+    <div>
+        <label for="tanggal_pendaftaran">Tanggal Pendaftaran</label>
+        <input type="date" name="tanggal_pendaftaran" id="tanggal_pendaftaran" value="{{ old('tanggal_pendaftaran', $peserta->tanggal_pendaftaran ?? now()->format('Y-m-d')) }}" required>
+        @error('tanggal_pendaftaran')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
 
-<div>
-    <label>Nama Peserta:</label>
-    <input type="text" name="nama_peserta" value="{{ old('nama_peserta', $peserta->nama_peserta ?? '') }}">
-    @error('nama_peserta') <small style="color:red">{{ $message }}</small> @enderror
-</div>
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" {{ isset($peserta) ? '' : 'required' }}>
+        @error('password')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
 
-<div>
-    <label>Email:</label>
-    <input type="email" name="email" value="{{ old('email', $peserta->email ?? '') }}">
-    @error('email') <small style="color:red">{{ $message }}</small> @enderror
-</div>
+    <div>
+        <label for="password_confirmation">Konfirmasi Password</label>
+        <input type="password" name="password_confirmation" id="password_confirmation" {{ isset($peserta) ? '' : 'required' }}>
+    </div>
 
-<div>
-    <label>Password:</label>
-    <input type="password" name="password">
-    @error('password') <small style="color:red">{{ $message }}</small> @enderror
-</div>
-
-<div>
-    <label>Konfirmasi Password:</label>
-    <input type="password" name="password_confirmation">
-</div>
-
-<div>
-    <label>Status Pendaftaran:</label>
-    <select name="status_pendaftaran">
-        @foreach(['Diterima', 'Ditolak'] as $status)
-            <option value="{{ $status }}" {{ old('status_pendaftaran', $peserta->status_pendaftaran ?? '') == $status ? 'selected' : '' }}>
-                {{ $status }}
-            </option>
-        @endforeach
-    </select>
-    @error('status_pendaftaran') <small style="color:red">{{ $message }}</small> @enderror
-</div>
-
-<div>
-    <label>Tanggal Pendaftaran:</label>
-    <input type="date" name="tanggal_pendaftaran" value="{{ old('tanggal_pendaftaran', $peserta->tanggal_pendaftaran ?? '') }}">
-    @error('tanggal_pendaftaran') <small style="color:red">{{ $message }}</small> @enderror
-</div>
+    <div style="margin-top: 10px;">
+        <button type="submit">{{ isset($peserta) ? 'Update' : 'Daftar' }}</button>
+    </div>
+</form>

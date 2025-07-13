@@ -1,0 +1,47 @@
+@extends('layouts.app')
+
+@section('content')
+    <h1>Daftar Peserta untuk {{ $proposal->nama_acara }}</h1>
+
+    <form method="GET" action="{{ route('peserta.byProposal', $proposal->id_proposal) }}">
+        <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari peserta...">
+        <button type="submit">Cari</button>
+    </form>
+
+    <a href="{{ route('peserta.create', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a>
+    @if ($pesertas->count())
+        <table border="1" cellpadding="10" cellspacing="0" style="margin-top: 10px; width: 100%;">
+            <thead>
+                <tr>
+                    <th>NIM</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($pesertas as $peserta)
+                    <tr>
+                        <td>{{ $peserta->nim }}</td>
+                        <td>{{ $peserta->nama_peserta }}</td>
+                        <td>{{ $peserta->email }}</td>
+                        <td>
+                            <a href="{{ route('peserta.edit', $peserta->nim) }}">Edit</a> |
+                            <form action="{{ route('peserta.destroy', $peserta->nim) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button onclick="return confirm('Yakin?')" type="submit">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        {{ $pesertas->links() }}
+    @else
+        <p>Tidak ada peserta terdaftar.</p>
+    @endif
+
+    <a href="{{ route('proposals.show', $proposal->id_proposal) }}">⬅ Kembali ke Proposal</a>
+@endsection

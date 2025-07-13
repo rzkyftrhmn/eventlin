@@ -38,7 +38,7 @@
                     <td>{{ $proposal->nama_acara }}</td>
                     <td>{{ $proposal->judul_proposal }}</td>
                     <td>{{ $proposal->status_proposal }}</td>
-                    <td><a href="{{ asset('proposals/' . $proposal->file_proposal) }}" target="_blank">Lihat</a></td>
+                    <td><a href="{{ asset($proposal->file_proposal) }}" target="_blank">Lihat File</a></td>
                     <td>
                         <a href="{{ route('proposals.show', $proposal->id_proposal) }}">Detail</a> |
                         <a href="{{ route('proposals.edit', $proposal->id_proposal) }}">Edit</a> |

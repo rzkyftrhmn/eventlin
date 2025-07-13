@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Tambah Peserta</h2>
-<form action="{{ route('peserta.store') }}" method="POST">
+    <h1>Daftar Sebagai Peserta</h1>
     @include('peserta.form')
-    <button type="submit">Simpan</button>
-</form>
 @endsection

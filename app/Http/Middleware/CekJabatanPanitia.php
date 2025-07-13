@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckJabatan
+class CekJabatanPanitia
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,16 @@ class CheckJabatan
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        $user = auth('panitia')->user();
+        $user = auth()->guard('panitia')->user();
+
         if (!$user || !in_array($user->jabatan_panitia, $roles)) {
-            abort(403, 'Akses ditolak.');
+            return redirect()->route('panitia.loginForm');
         }
-        return $next($request);
+
+        if (in_array($user->jabatan_panitia, $roles)) {
+            return $next($request);
         }
+
+        abort(403, 'Akses ditolak.');
+    }
 }

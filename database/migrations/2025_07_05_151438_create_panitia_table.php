@@ -18,7 +18,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_proposal');
             $table->foreign('id_proposal')->references('id_proposal')->on('proposals')->onDelete('cascade');
             $table->string('nama_panitia');
-            $table->enum('jabatan_panitia', ['Ketua', 'Sekretaris', 'Bendahara', 'Panitia']);
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->enum('jabatan_panitia', ['Ketua', 'Sekretaris', 'Bendahara', 'Panitia','akademik']);
+            $table->rememberToken();
             $table->timestamps();
         });
     }

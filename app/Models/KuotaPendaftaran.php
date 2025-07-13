@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class KuotaPendaftaran extends Model
 {
-    protected $primaryKey = 'id_proposal';
+    protected $primaryKey = 'id_kuota_pendaftaran';
+    public $incrementing = true;
     protected $guarded = [];
-    public $incrementing = false;
+
 
     public function proposal()
     {

@@ -6,51 +6,102 @@ use App\Models\Peserta;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class PesertaController extends Controller
 {
-     public function index()
+   public function index(Request $request)
     {
-        $pesertas = Peserta::all();
-        return view('peserta.index', compact('pesertas'));
+        $search = $request->input('search');
+        $filterProposal = $request->input('proposal');
+
+        $query = \App\Models\Peserta::with('proposal');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_peserta', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($filterProposal) {
+            $query->where('id_proposal', $filterProposal);
+        }
+
+        $pesertas = $query->orderBy('created_at', 'desc')->paginate(10); // 👈 Pagination
+        $proposals = \App\Models\Proposal::all();
+
+        return view('peserta.index', compact('pesertas', 'search', 'filterProposal', 'proposals'));
     }
 
-    public function create()
+
+    public function indexByProposal($id_proposal)
     {
-        $proposals = Proposal::all();
-        return view('peserta.create', compact('proposals'));
+        $proposal = Proposal::with('pesertas')->findOrFail($id_proposal);
+        $search = request('search');
+
+        $pesertas = $proposal->pesertas();
+
+            if ($search) {
+                $pesertas = $pesertas->where(function ($query) use ($search) {
+                    $query->where('nama_peserta', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('nim', 'like', "%{$search}%");
+                });
+            }
+
+            $pesertas = $pesertas->paginate(10);
+
+            return view('peserta.index_by_proposal', compact('proposal', 'pesertas', 'search'));
     }
 
-    public function store(Request $request)
+    public function create($id_proposal)
     {
+        $proposal = Proposal::findOrFail($id_proposal);
+        $kuota = $proposal->kuotaPendaftaran;
+
+        if (!$kuota || $kuota->status_pendaftaran !== 'Buka' || $kuota->kuota_terpakai >= $kuota->total_kuota) {
+            return redirect()->route('proposals.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
+        }
+
+        return view('peserta.create', compact('proposal'));
+    }
+
+    public function store(Request $request, $id_proposal)
+    {
+        $proposal = Proposal::findOrFail($id_proposal);
+        $kuota = $proposal->kuotaPendaftaran;
+
+        if (!$kuota || $kuota->status_pendaftaran !== 'Buka' || $kuota->kuota_terpakai >= $kuota->total_kuota) {
+            return redirect()->route('proposals.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
+        }
+
         $request->validate([
             'nim' => 'required|string|unique:pesertas,nim',
-            'id_proposal' => 'required|exists:proposals,id_proposal',
             'nama_peserta' => 'required|string|max:255',
             'email' => 'required|email|unique:pesertas,email',
-            'password' => 'required|string|confirmed|min:6',
-            'status_pendaftaran' => 'required|in:Diterima,Ditolak',
             'tanggal_pendaftaran' => 'required|date',
+            'password' => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
         ]);
 
         Peserta::create([
             'nim' => $request->nim,
-            'id_proposal' => $request->id_proposal,
+            'id_proposal' => $id_proposal,
             'nama_peserta' => $request->nama_peserta,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'status_pendaftaran' => $request->status_pendaftaran,
             'tanggal_pendaftaran' => $request->tanggal_pendaftaran,
+            'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('peserta.index')->with('success', 'Peserta berhasil ditambahkan.');
+        $kuota->increment('kuota_terpakai');
+
+        return redirect()->route('proposals.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
     }
 
     public function edit($nim)
     {
-        $peserta = Peserta::findOrFail($nim);
-        $proposals = Proposal::all();
-        return view('peserta.edit', compact('peserta', 'proposals'));
+          $peserta = Peserta::findOrFail($nim);
+        return view('peserta.edit', compact('peserta'));
     }
 
     public function update(Request $request, $nim)
@@ -58,17 +109,35 @@ class PesertaController extends Controller
         $peserta = Peserta::findOrFail($nim);
 
         $request->validate([
-            'id_proposal' => 'required|exists:proposals,id_proposal',
+            'nim' => [
+                'required',
+                'string',
+                Validator::unique('pesertas', 'nim')->ignore($peserta->nim, 'nim')
+            ],
             'nama_peserta' => 'required|string|max:255',
-            'email' => 'required|email|unique:pesertas,email,' . $peserta->nim . ',nim',
-            'password' => 'nullable|string|confirmed|min:6',
-            'status_pendaftaran' => 'required|in:Diterima,Ditolak',
+            'email' => [
+            'required',
+            'email',
+            Validator::unique('pesertas', 'email')->ignore($peserta->nim, 'nim')
+            ],
+            'password' => [
+                'nullable',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[a-z]/',    // huruf kecil
+                'regex:/[A-Z]/',    // huruf besar
+                'regex:/[0-9]/',    // angka
+            ],
             'tanggal_pendaftaran' => 'required|date',
         ]);
 
-        $data = $request->only([
-            'id_proposal', 'nama_peserta', 'email', 'status_pendaftaran', 'tanggal_pendaftaran'
-        ]);
+        
+        $data = [
+                'nama_peserta' => $request->nama_peserta,
+                'email' => $request->email,
+                'tanggal_pendaftaran' => $request->tanggal_pendaftaran,
+            ];
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
@@ -84,4 +153,5 @@ class PesertaController extends Controller
         Peserta::destroy($nim);
         return redirect()->route('peserta.index')->with('success', 'Peserta berhasil dihapus.');
     }
+    
 }

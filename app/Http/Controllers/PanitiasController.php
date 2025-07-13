@@ -13,100 +13,138 @@ use Illuminate\Support\Facades\Validator;
 
 class PanitiasController extends Controller
 {
-       public function index()
+    public function index(Request $request)
     {
-        $pesertas = Peserta::all();
-        return view('peserta.index', compact('pesertas'));
+        $search = $request->input('search');
+        $filterProposal = $request->input('proposal');
+
+        $query = \App\Models\Panitia::with(['proposal', 'divisi']);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_panitia', 'like', "%{$search}%")
+                ->orWhere('jabatan_panitia', 'like', "%{$search}%");
+            });
+        }
+
+        if ($filterProposal) {
+            $query->where('id_proposal', $filterProposal);
+        }
+
+        $panitias = $query->orderBy('created_at', 'desc')->paginate(10); // 👈 Pagination
+        $proposals = \App\Models\Proposal::all();
+
+        return view('panitia.index', compact('panitias', 'search', 'filterProposal', 'proposals'));
     }
 
-    public function create()
+
+    public function indexByProposal(Request $request, $id_proposal)
     {
-        $proposals = Proposal::all();
-        return view('peserta.create', compact('proposals'));
+        $proposal = Proposal::with('panitia.divisi')->findOrFail($id_proposal);
+        $search = $request->input('search');
+
+        $panitiaQuery = $proposal->panitia();
+
+        if ($search) {
+            $panitiaQuery->where(function ($query) use ($search) {
+                $query->where('nama_panitia', 'like', "%{$search}%")
+                    ->orWhere('jabatan_panitia', 'like', "%{$search}%");
+            });
+        }
+
+        $panitias = $panitiaQuery->with('divisi')->paginate(10);
+
+        return view('panitia.index_by_proposal', compact('proposal', 'panitias', 'search'));
     }
 
-    public function store(Request $request)
+    
+    public function create($id_proposal)
     {
-        $request->validate([
-            'nim' => 'required|string|unique:pesertas,nim',
-            'id_proposal' => 'required|exists:proposals,id_proposal',
-            'nama_peserta' => 'required|string|max:255',
-            'email' => 'required|email|unique:pesertas,email',
+        $proposal = Proposal::findOrFail($id_proposal);
+        $divisis = Divisi::all();
+        return view('panitia.create', compact('proposal', 'divisis'));
+    }
+    
+    public function store(Request $request, $id_proposal)
+    {
+            $request->validate([
+            'nama_panitia' => 'required|string|max:255',
+            'email' => 'required|email|unique:panitia,email',
             'password' => [
                 'required',
                 'string',
-                'confirmed',
                 'min:8',
-                'regex:/[a-z]/',   // huruf kecil
-                'regex:/[A-Z]/',   // huruf besar
-                'regex:/[0-9]/',   // angka
+                'regex:/[a-z]/',        // Huruf kecil
+                'regex:/[A-Z]/',        // Huruf besar
+                'regex:/[0-9]/',        // Angka
+                'confirmed'             
             ],
-            'status_pendaftaran' => 'required|in:Diterima,Ditolak',
-            'tanggal_pendaftaran' => 'required|date',
+            'jabatan_panitia' => 'required|in:Ketua,Sekretaris,Bendahara,Panitia',
+            'id_divisi' => 'nullable|required_if:jabatan_panitia,Panitia',
         ]);
 
-        Peserta::create([
-            'nim' => $request->nim,
-            'id_proposal' => $request->id_proposal,
-            'nama_peserta' => $request->nama_peserta,
+        Panitia::create([
+            'id_proposal' => $id_proposal,
+            'id_divisi' => $request->jabatan_panitia === 'Panitia' ? $request->id_divisi : null,
+            'nama_panitia' => $request->nama_panitia,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'status_pendaftaran' => $request->status_pendaftaran,
-            'tanggal_pendaftaran' => $request->tanggal_pendaftaran,
+            'jabatan_panitia' => $request->jabatan_panitia,
         ]);
 
-        return redirect()->route('peserta.index')->with('success', 'Peserta berhasil ditambahkan.');
+        return redirect()->route('panitia.byProposal', $id_proposal)->with('success', 'Panitia berhasil ditambahkan.');
     }
-
-    public function edit($nim)
+    
+    public function edit($id_panitia)
     {
-        $peserta = Peserta::findOrFail($nim);
-        $proposals = Proposal::all();
-        return view('peserta.edit', compact('peserta', 'proposals'));
+        $panitia = Panitia::findOrFail($id_panitia);
+        $divisis = Divisi::all();
+        return view('panitia.edit', compact('panitia', 'divisis'));
     }
-
-    public function update(Request $request, $nim)
-    {
-        $peserta = Peserta::findOrFail($nim);
+    
+    public function update(Request $request, $id_panitia)
+   {
+       $panitia = Panitia::findOrFail($id_panitia);
 
         $request->validate([
-            'id_proposal' => 'required|exists:proposals,id_proposal',
-            'nama_peserta' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'email',
-                Validator::unique('pesertas', 'email')->ignore($peserta->nim, 'nim'),
-            ],
-            'password' => [
+            'nama_panitia' => 'required|string|max:255',
+            'email' => ['required','email',ValidationRule::unique('panitia', 'email')->ignore($panitia->id_panitia, 'id_panitia')],
+            'password' =>[
                 'nullable',
                 'string',
-                'confirmed',
                 'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
+                'regex:/[a-z]/',        // Huruf kecil
+                'regex:/[A-Z]/',        // Huruf besar
+                'regex:/[0-9]/',        // Angka
+         
             ],
-            'status_pendaftaran' => 'required|in:Diterima,Ditolak',
-            'tanggal_pendaftaran' => 'required|date',
+            'jabatan_panitia' => 'required|in:Ketua,Sekretaris,Bendahara,Panitia',
+            'id_divisi' => 'nullable|required_if:jabatan_panitia,Panitia',
         ]);
 
-        $data = $request->only([
-            'id_proposal', 'nama_peserta', 'email', 'status_pendaftaran', 'tanggal_pendaftaran'
-        ]);
+        $data = [
+            'nama_panitia' => $request->nama_panitia,
+            'email' => $request->email,
+            'jabatan_panitia' => $request->jabatan_panitia,
+            'id_divisi' => $request->jabatan_panitia === 'Panitia' ? $request->id_divisi : null,
+        ];
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 
-        $peserta->update($data);
+        $panitia->update($data);
 
-        return redirect()->route('peserta.index')->with('success', 'Data peserta berhasil diperbarui.');
-    }
-
-    public function destroy($nim)
+        return redirect()->route('panitia.byProposal', $panitia->id_proposal)->with('success', 'Data panitia berhasil diperbarui.');
+   }
+    
+    public function destroy($id_panitia)
     {
-        Peserta::destroy($nim);
-        return redirect()->route('peserta.index')->with('success', 'Peserta berhasil dihapus.');
+        $panitia = Panitia::findOrFail($id_panitia);
+        $proposalId = $panitia->id_proposal;
+        $panitia->delete();
+    
+        return redirect()->route('panitia.index', $proposalId)->with('success', 'Panitia berhasil dihapus.');
     }
     
 }

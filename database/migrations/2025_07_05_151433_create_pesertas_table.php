@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreign('id_proposal')->references('id_proposal')->on('proposals')->onDelete('cascade');
             $table->string('nama_peserta');
             $table->string('email');
-            $table->enum('status_pendaftaran', ['Diterima', 'Ditolak']);
+            $table->string('password');
+            $table->rememberToken(); // sama dengan $table->string('remember_token', 100)->nullable();
             $table->date('tanggal_pendaftaran');
             $table->timestamps();
         });

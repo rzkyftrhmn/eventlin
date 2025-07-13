@@ -2,15 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class Peserta extends Model
+class Peserta extends Model implements AuthenticatableContract
 {
-    use HasFactory;
+    use Authenticatable;
 
+    protected $table = 'pesertas';
     protected $primaryKey = 'nim';
-    protected $guarded = [];
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $fillable = [
+        'nim',
+        'id_proposal',
+        'nama_peserta',
+        'email',
+        'password',
+        'tanggal_pendaftaran',
+    ];
+
+    protected $hidden = ['password'];
 
     public function proposal()
     {

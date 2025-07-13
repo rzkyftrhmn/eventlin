@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KuotaPendaftaran;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProposalController extends Controller
@@ -26,6 +28,19 @@ class ProposalController extends Controller
         }
 
         return view('proposals.index', compact('proposals', 'search'));
+    }
+
+
+    public function indexForPanitia()
+    {
+        $user = Auth::user(); // asumsi panitia sudah login dan merupakan model Panitia
+
+        // Ambil semua proposal yang memiliki panitia dengan email login saat ini
+        $proposals = Proposal::whereHas('panitia', function($query) use ($user) {
+            $query->where('email', $user->email);
+        })->with('panitia')->get();
+
+        return view('proposal.panitia_index', compact('proposals'));
     }
 
     public function create()
@@ -67,12 +82,21 @@ class ProposalController extends Controller
         }
         
         $proposal->save();
+
+        // Buat data kuota kosong otomatis
+        KuotaPendaftaran::create([
+            'id_proposal' => $proposal->id_proposal,
+            'total_kuota' => 0,
+            'kuota_terpakai' => 0,
+            'status_pendaftaran' => 'Tutup',
+        ]);
+        
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil disimpan!');
     }
 
     public function show($id)
     {
-        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi'])->findOrFail($id);
+        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi','kuotaPendaftaran','pesertas'])->findOrFail($id);
         return view('proposals.show', compact('proposal'));
     }
 
@@ -134,14 +158,14 @@ class ProposalController extends Controller
     }
 
     public function search(Request $request)
-{
-    $keyword = $request->input('keyword');
-    $proposals = Proposal::where('nama_acara', 'like', "%$keyword%")
-        ->orWhere('judul_proposal', 'like', "%$keyword%")
-        ->paginate(5)
-        ->appends(['keyword' => $keyword]);
+    {
+        $keyword = $request->input('keyword');
+        $proposals = Proposal::where('nama_acara', 'like', "%$keyword%")
+            ->orWhere('judul_proposal', 'like', "%$keyword%")
+            ->paginate(5)
+            ->appends(['keyword' => $keyword]);
 
-    return view('proposals.index', compact('proposals'));
-}
+        return view('proposals.index', compact('proposals'));
+    }
 
 }
