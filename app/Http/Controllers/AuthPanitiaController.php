@@ -42,14 +42,8 @@ class AuthPanitiaController extends Controller
 
     public function dashboard()
     {
-        $nama = auth()->guard('panitia')->user()->nama_panitia;
+        $user = auth('panitia')->user();
 
-        return '
-            <h2>Halo Panitia ' . $nama . '</h2>
-            <form action="' . route('panitia.logout') . '" method="POST" style="margin-top: 20px;">
-                ' . csrf_field() . '
-                <button type="submit">Logout</button>
-            </form>
-        ';
+        return view('auth.panitia.dashboard', compact('user'));
     }
 }

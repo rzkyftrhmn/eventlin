@@ -30,18 +30,13 @@ class ProposalController extends Controller
         return view('proposals.index', compact('proposals', 'search'));
     }
 
-
-    public function indexForPanitia()
+    public function showByPanitia()
     {
-        $user = Auth::user(); // asumsi panitia sudah login dan merupakan model Panitia
+        $proposal = Proposal::find(auth('panitia')->user()->id_proposal);
 
-        // Ambil semua proposal yang memiliki panitia dengan email login saat ini
-        $proposals = Proposal::whereHas('panitia', function($query) use ($user) {
-            $query->where('email', $user->email);
-        })->with('panitia')->get();
-
-        return view('proposal.panitia_index', compact('proposals'));
+        return view('proposals.proposal_show_table', compact('proposal'));
     }
+
 
     public function create()
     {

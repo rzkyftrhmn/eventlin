@@ -71,5 +71,6 @@ class AuthAdminController extends Controller
         <form method='POST' action='" . route('admin.logout') . "'>" . csrf_field() . "
             <button type='submit'>Logout</button>
         </form>";
+        
     }
 }

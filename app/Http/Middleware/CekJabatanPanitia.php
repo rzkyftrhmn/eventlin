@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class CekJabatanPanitia
@@ -16,15 +17,16 @@ class CekJabatanPanitia
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         $user = auth()->guard('panitia')->user();
-
-        if (!$user || !in_array($user->jabatan_panitia, $roles)) {
+        Log::info('Jabatan user: ' . $user->jabatan_panitia);
+        Log::info('Roles yang diizinkan: ' . implode(', ', $roles));
+        // Kalau tidak login
+        if (!$user) {
             return redirect()->route('panitia.loginForm');
         }
-
-        if (in_array($user->jabatan_panitia, $roles)) {
-            return $next($request);
+        // Kalau jabatannya tidak sesuai
+        if (!in_array($user->jabatan_panitia, $roles)) {
+            abort(403, 'Akses ditolak: Jabatan tidak diizinkan.');
         }
-
-        abort(403, 'Akses ditolak.');
+        return $next($request);
     }
 }

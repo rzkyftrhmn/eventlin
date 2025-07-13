@@ -45,6 +45,14 @@ Route::middleware('guest:panitia')->group(function () {
 Route::middleware(['auth:panitia'])->group(function () {
     Route::get('/dashboard/panitia', [AuthPanitiaController::class, 'dashboard'])->name('panitia.dashboard');
     Route::post('/logout/panitia', [AuthPanitiaController::class, 'logout'])->name('panitia.logout');
+    Route::get('/proposal-ku', [ProposalController::class, 'showByPanitia'])->name('proposal.panitia.show');
+    
+    // Routes for ketua, sekretaris, bendahara
+    Route::middleware(['cek.jabatan:ketua,sekretaris,bendahara'])->group(function () {
+        Route::get('/panitia/proposals/{id}', [ProposalController::class, 'show'])
+            ->name('proposal.superpanitia.show');
+    });
+
 });
 
 // Auth routes for peserta 
@@ -119,7 +127,7 @@ Route::put('persetujuans/{id_proposal}', [PersetujuanController::class, 'update'
 // Persetujuan internal (Ketua & Sekretaris)
 Route::get('/persetujuans/{id}/edit-status', [PersetujuanController::class, 'editStatus'])->name('persetujuans.editStatus');
 Route::put('/persetujuans/{id}/update-status', [PersetujuanController::class, 'updateStatus'])->name('persetujuans.updateStatus');
-// Route::get('/panitia/proposals', [ProposalController::class, 'indexForPanitia'])->name('proposal.panitia_index');
+Route::get('/proposal-ku', [ProposalController::class, 'showByPanitia'])->name('proposal.panitia.show');
 
 // Rundown (panitia acara)
 Route::get('/proposals/{id_proposal}/rundowns/create', [RundownController::class, 'createRundown'])->name('rundowns.createRundown');
