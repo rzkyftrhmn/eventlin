@@ -33,8 +33,11 @@ class KuotaPendaftaranController extends Controller
             'total_kuota' => $request->total_kuota,
             'status_pendaftaran' => $request->status_pendaftaran,
         ]);
-
-        return redirect()->route('proposals.show', $kuota->id_proposal)->with('success', 'Kuota berhasil diperbarui.');
+        if (auth('admin')->check()) {
+            return redirect()->route('proposals.show', $kuota->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('proposal.superpanitia.show', $kuota->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+        }
     }
 
 }

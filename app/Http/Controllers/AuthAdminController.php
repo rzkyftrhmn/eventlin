@@ -67,10 +67,8 @@ class AuthAdminController extends Controller
 
     public function dashboard()
     {
-        return "<h2>Halo Admin " . auth('admin')->user()->nama_admin . "</h2>
-        <form method='POST' action='" . route('admin.logout') . "'>" . csrf_field() . "
-            <button type='submit'>Logout</button>
-        </form>";
-        
+        $user = auth('admin')->user();
+        return view('auth.admin.dashboard', compact('user'));
     }
+
 }

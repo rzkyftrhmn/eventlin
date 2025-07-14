@@ -7,6 +7,8 @@
         <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari peserta...">
         <button type="submit">Cari</button>
     </form>
+    
+   
 
     <a href="{{ route('peserta.create', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a>
     @if ($pesertas->count())
@@ -42,6 +44,20 @@
     @else
         <p>Tidak ada peserta terdaftar.</p>
     @endif
+     @php
+        $id_proposal = $proposal->id_proposal;
+    @endphp
+    @if(auth()->guard('admin')->check())
+        <a href="{{ route('proposals.show', $id_proposal) }}">Kembali ke Detail Proposal</a>
+    @elseif(auth()->guard('panitia')->check())
+        @php
+            $jabatan = strtolower(auth('panitia')->user()->jabatan_panitia);
+        @endphp
 
-    <a href="{{ route('proposals.show', $proposal->id_proposal) }}">⬅ Kembali ke Proposal</a>
+        @if(in_array($jabatan, ['ketua', 'sekretaris', 'bendahara']))
+            <a href="{{ route('proposal.superpanitia.show', $id_proposal) }}">Kembali ke Detail Proposal</a>
+        @else
+            <a href="{{ route('proposal.panitia.show.read', ['id' => $id_proposal]) }}">Kembali ke Detail Proposal</a>
+        @endif
+    @endif
 @endsection

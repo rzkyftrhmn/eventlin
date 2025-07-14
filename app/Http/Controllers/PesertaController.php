@@ -95,7 +95,11 @@ class PesertaController extends Controller
 
         $kuota->increment('kuota_terpakai');
 
-        return redirect()->route('proposals.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
+        if (auth('admin')->check()) {
+            return redirect()->route('proposal.show', $id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('proposal.superpanitia.show', $id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+        }
     }
 
     public function edit($nim)

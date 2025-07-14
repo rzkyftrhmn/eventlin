@@ -44,6 +44,11 @@ class AuthPanitiaController extends Controller
     {
         $user = auth('panitia')->user();
 
+        
+        // Jika jabatan panitia adalah Akademik, redirect ke index persetujuan
+        if ($user->jabatan_panitia === 'akademik') {
+            return redirect()->route('persetujuans.indexAkademik');
+        }
         return view('auth.panitia.dashboard', compact('user'));
     }
 }

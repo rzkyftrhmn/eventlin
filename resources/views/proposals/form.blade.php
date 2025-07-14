@@ -1,3 +1,12 @@
+@if ($errors->any())
+<div style="color:red;">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 <div>
     <label>Nama Acara:</label>
     <input type="text" name="nama_acara" value="{{ old('nama_acara', $proposal->nama_acara ?? '') }}" required><br>
@@ -17,15 +26,6 @@
     @if (isset($proposal) && $proposal->file_proposal)
         <a href="{{ asset('storage/' . $proposal->file_proposal) }}" target="_blank">Lihat File Lama</a><br>
     @endif
-
-    <label>Status Proposal:</label>
-    <select name="status_proposal" required>
-        <option value="">-- Pilih Status --</option>
-        <option value="Diajukan" {{ old('status_proposal', $proposal->status_proposal ?? '') == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
-    </select></br>
-
-    <label>Tanggal Pengajuan:</label>
-    <input type="date" name="tanggal_pengajuan" value="{{ old('tanggal_pengajuan', $proposal->tanggal_pengajuan ?? '') }}" required><br>
 
     <label>Estimasi Peserta:</label>
     <input type="number" name="estimasi_peserta" value="{{ old('estimasi_peserta', $proposal->estimasi_peserta ?? '') }}" required><br>

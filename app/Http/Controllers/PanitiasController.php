@@ -8,6 +8,7 @@ use App\Models\Peserta;
 use App\Models\Proposal;
 use Illuminate\Validation\Rule as ValidationRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -79,9 +80,27 @@ class PanitiasController extends Controller
                 'regex:/[0-9]/',        // Angka
                 'confirmed'             
             ],
-            'jabatan_panitia' => 'required|in:Ketua,Sekretaris,Bendahara,Panitia',
+            'jabatan_panitia' => 'required|in:Ketua,Sekretaris,Bendahara,Panitia,Akademik',
             'id_divisi' => 'nullable|required_if:jabatan_panitia,Panitia',
         ]);
+
+        // Cek apakah sudah ada jabatan yang sama di proposal ini (kecuali Panitia biasa)
+        if (in_array($request->jabatan_panitia, ['Ketua', 'Sekretaris', 'Bendahara'])) {
+            $sudahAda = Panitia::where('id_proposal', $id_proposal)
+                ->where('jabatan_panitia', $request->jabatan_panitia)
+                ->exists();
+
+            if ($sudahAda) {
+                return redirect()->back()->withInput()->withErrors([
+                    'jabatan_panitia' => 'Sudah ada ' . $request->jabatan_panitia . ' untuk proposal ini.',
+                ]);
+            }
+        }
+
+        if (!Gate::allows('edit-jabatan-panitia')) {
+            $request->merge(['jabatan_panitia' => 'Panitia']);
+        }
+
 
         Panitia::create([
             'id_proposal' => $id_proposal,
@@ -92,7 +111,11 @@ class PanitiasController extends Controller
             'jabatan_panitia' => $request->jabatan_panitia,
         ]);
 
-        return redirect()->route('panitia.byProposal', $id_proposal)->with('success', 'Panitia berhasil ditambahkan.');
+         if (auth('admin')->check()) {
+            return redirect()->route('proposal.byProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('panitia.SuperbyProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
+        }
     }
     
     public function edit($id_panitia)
@@ -118,7 +141,7 @@ class PanitiasController extends Controller
                 'regex:/[0-9]/',        // Angka
          
             ],
-            'jabatan_panitia' => 'required|in:Ketua,Sekretaris,Bendahara,Panitia',
+            'jabatan_panitia' => 'required|in:Ketua,Sekretaris,Bendahara,Panitia,Akademik',
             'id_divisi' => 'nullable|required_if:jabatan_panitia,Panitia',
         ]);
 
@@ -132,10 +155,32 @@ class PanitiasController extends Controller
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
+        
+        if (in_array($request->jabatan_panitia, ['Ketua', 'Sekretaris', 'Bendahara'])) {
+            $sudahAda = Panitia::where('id_proposal', $panitia->id_proposal)
+                ->where('jabatan_panitia', $request->jabatan_panitia)
+                ->where('id_panitia', '!=', $panitia->id_panitia) // Hindari bentrok dengan dirinya sendiri
+                ->exists();
+
+            if ($sudahAda) {
+                return redirect()->back()->withInput()->withErrors([
+                    'jabatan_panitia' => 'Sudah ada ' . $request->jabatan_panitia . ' untuk proposal ini.',
+                ]);
+            }
+        }
+
+        if (!Gate::allows('edit-jabatan-panitia')) {
+            $request->merge(['jabatan_panitia' => 'Panitia']);
+        }
+
 
         $panitia->update($data);
 
-        return redirect()->route('panitia.byProposal', $panitia->id_proposal)->with('success', 'Data panitia berhasil diperbarui.');
+         if (auth('admin')->check()) {
+            return redirect()->route('proposal.byProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('panitia.SuperbyProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
+        }
    }
     
     public function destroy($id_panitia)
@@ -143,8 +188,14 @@ class PanitiasController extends Controller
         $panitia = Panitia::findOrFail($id_panitia);
         $proposalId = $panitia->id_proposal;
         $panitia->delete();
-    
-        return redirect()->route('panitia.index', $proposalId)->with('success', 'Panitia berhasil dihapus.');
+            // Redirect dinamis tergantung siapa yang login
+        if (auth('admin')->check()) {
+            return redirect()->route('proposal.byProposal', $proposalId)->with('success', 'Panitia berhasil dihapus.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('panitia.SuperbyProposal', $proposalId)->with('success', 'Panitia berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Tidak memiliki akses.');
     }
     
 }

@@ -78,7 +78,12 @@ class PersetujuanController extends Controller
         $persetujuan->status_persetujuan = $request->status_persetujuan;
         $persetujuan->save();
     
-        return redirect()->route('proposals.index')->with('success', 'Status persetujuan berhasil diperbarui.');
+       if (auth('admin')->check()) {
+            return redirect()->route('proposal.index')->with('success', 'Panitia berhasil dihapus.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('proposal.panitia.show')->with('success', 'Panitia berhasil dihapus.');
+        }
+
     }
    
 }

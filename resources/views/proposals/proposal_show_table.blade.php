@@ -35,7 +35,19 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('proposal.superpanitia.show', $proposal->id_proposal) }}">Lihat Detail</a>
+                        @switch(strtolower(auth('panitia')->user()->jabatan_panitia))
+                            @case('ketua')
+                            @case('sekretaris')
+                            @case('bendahara')
+                                <a href="{{ route('proposal.superpanitia.show', $proposal->id_proposal) }}">Lihat Detail</a>
+                                @break
+                            @case('panitia')
+                                <a href="{{ route('proposal.panitia.show.read', $proposal->id_proposal) }}">Lihat (Read-Only)</a>
+                                @break
+                            @default
+                                <span style="color: red;">Akses ditolak</span>
+                        @endswitch
+
                     </td>
                 </tr>
             </tbody>

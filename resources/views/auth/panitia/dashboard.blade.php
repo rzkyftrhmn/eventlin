@@ -2,7 +2,6 @@
 
 @section('content')
     <h2>Halo {{ $user->nama_panitia }} ({{ $user->jabatan_panitia }})</h2>
-
     <form method="POST" action="{{ route('panitia.logout') }}" style="margin-bottom: 15px;">
         @csrf
         <button type="submit">Logout</button>
