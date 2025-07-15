@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Schema; 
 
 return new class extends Migration
 {
@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id('id_absensi');
             $table->unsignedBigInteger('id_panitia');
             $table->foreign('id_panitia')->references('id_panitia')->on('panitia')->onDelete('cascade');
+            $table->unsignedBigInteger('id_rundown')->nullable()->after('id_panitia');
+            $table->foreign('id_rundown')->references('id_rundown')->on('rundowns')->onDelete('cascade');
             $table->enum('status_kehadiran', ['Hadir', 'Tidak Hadir', 'Izin', 'Terlambat']);
             $table->time('waktu_absen');
             $table->text('keterangan')->nullable();

@@ -29,8 +29,13 @@ class RundownController extends Controller
     
         Rundown::create($request->all());
     
-        return redirect()->route('proposals.show', $request->id_proposal)
-                         ->with('success', 'Rundown berhasil ditambahkan.');
+        if (auth('admin')->check()) {
+            return redirect()->route('proposals.show', $request->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('proposal.superpanitia.show', $request->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+        }
+
+
     }
 
     public function show(string $id)
@@ -61,7 +66,11 @@ class RundownController extends Controller
             'tanggal_kegiatan' => $request->tanggal_kegiatan,
         ]);
     
-        return redirect()->route('proposals.show', $rundown->id_proposal)->with('success', 'Rundown berhasil diperbarui.');
+        if (auth('admin')->check()) {
+            return redirect()->route('proposals.show', $rundown->id_proposal)->with('success', 'Rundown berhasil diperbarui.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('proposal.superpanitia.show', $rundown->id_proposal)->with('success', 'Rundown berhasil diperbarui.');
+        }
     }
 
     /**
@@ -72,6 +81,10 @@ class RundownController extends Controller
         $rundown = Rundown::findOrFail($id);
         $rundown->delete();
     
-        return redirect()->route('proposals.show', $rundown->id_proposal)->with('success', 'Rundown berhasil dihapus.');
+        if (auth('admin')->check()) {
+            return redirect()->route('proposals.show', $rundown->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+        } elseif (auth('panitia')->check()) {
+            return redirect()->route('proposal.superpanitia.show', $rundown->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+        };
     }
 }

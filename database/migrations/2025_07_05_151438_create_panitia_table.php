@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('panitia', function (Blueprint $table) {
             $table->id('id_panitia');
-            $table->unsignedBigInteger('id_divisi');
-            $table->foreign('id_divisi')->references('id_divisi')->on('divisis')->onDelete('cascade')->nullable();
+            $table->unsignedBigInteger('id_divisi')->nullable();
+            $table->foreign('id_divisi')->references('id_divisi')->on('divisis')->onDelete('cascade');
             $table->unsignedBigInteger('id_proposal');
             $table->foreign('id_proposal')->references('id_proposal')->on('proposals')->onDelete('cascade');
             $table->string('nama_panitia');

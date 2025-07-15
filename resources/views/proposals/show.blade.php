@@ -1,4 +1,35 @@
+
 @extends('layouts.app')
+@php
+    $id_proposal = $proposal->id_proposal;
+    // Route untuk kembali ke detail proposal
+    if (auth('admin')->check()) {
+        $routeTambahPanitia = route('panitia.create', $id_proposal);
+        $routeShowPanitia = route('panitia.byProposal', $id_proposal); 
+        $routeEditStatus =  $proposal->persetujuans 
+                            ? route('persetujuans.editStatus', $proposal->persetujuans->id_persetujuan)
+                            : null;
+        $routeCreateRundown = route('rundowns.createRundown', $id_proposal);
+    } elseif (auth('panitia')->check()) {
+        $jabatan = strtolower(auth('panitia')->user()->jabatan_panitia);
+
+        if (in_array($jabatan, ['ketua', 'sekretaris', 'bendahara', 'akademik'])) {
+            $routeTambahPanitia = route('panitia.Supercreate', $id_proposal);
+            $routeShowPanitia = route('panitia.SuperbyProposal', $id_proposal); 
+            $routeEditStatus = $proposal->persetujuans 
+                               ? route('persetujuans.SupereditStatus', $proposal->persetujuans->id_persetujuan)
+                               : null;
+            $routeCreateRundown = route('rundowns.SuperCreateRundown', $id_proposal);
+        } else {
+            $routeBack = route('proposal.panitia.show.read', ['id' => $id_proposal]);
+            $routeTambahPanitia = route('panitia.create', $id_proposal);
+        }
+    } else {
+        // default untuk debugging mode (misal akses publik)
+        $routeBack = route('proposals.show', $id_proposal);
+        $routeTambahPanitia = '#'; // atau nonaktifkan
+    }
+@endphp
 
 @section('content')
     <h1>Detail Proposal</h1>
@@ -20,10 +51,11 @@
     <p><strong>Tanggal Acara:</strong> {{ $proposal->tanggal_acara }}</p>
     <p><strong>Waktu Acara:</strong> {{ $proposal->waktu_acara }}</p>
     <p><strong>Detail Acara:</strong> {{ $proposal->detail_acara }}</p>
+    <p><strong>Tangal pengajuan</strong> {{ $proposal->tanggal_pengajuan}}</p>  
     <hr>
     <h3>Panitia Acara</h3>
-        <a href="{{ route('panitia.create', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Panitia</a><br>
-        <a href="{{ route('panitia.byProposal', ['id_proposal' => $proposal->id_proposal]) }}">Lihat Semua</a>
+        <a href="{{$routeTambahPanitia}}">+ Tambah Panitia</a><br>
+        <a href="{{$routeShowPanitia}}">Lihat Semua</a>
     @if($proposal->panitia->count() > 0)   
         <table>
             <thead>
@@ -52,10 +84,10 @@
         <p><strong>Pihak Penyetuju:</strong> {{ $proposal->persetujuans->pihak_penyetuju }}</p>
         <p><strong>Tanggal Persetujuan:</strong> {{ $proposal->persetujuans->tanggal_persetujuan }}</p>
         <p><strong>Status Persetujuan:</strong> {{ $proposal->persetujuans->status_persetujuan ?? 'Belum Ditentukan' }}</p>
-        <p><a href="{{ route('persetujuans.editStatus', $proposal->persetujuans->id_persetujuan) }}">Ubah Status</a></p>
+        <p><a href="{{ $routeEditStatus }}">Ubah Status</a></p>
         <hr>
         <h3>Rundown Acara</h3>
-        <a href="{{ route('rundowns.createRundown', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Rundown</a>
+        <a href="{{$routeCreateRundown}}">+ Tambah Rundown</a>
         @if ($proposal->rundowns->count())
             <table border="1" cellpadding="10" cellspacing="0" style="margin-top: 10px; width: 100%;">
                 <thead>
@@ -98,14 +130,13 @@
         @endif
         <hr>
      <h3>Peserta Acara</h3>
-        <a href="{{ route('peserta.create', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a><br>
+        <a href="{{ route('peserta.created', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a><br>
         <a href="{{ route('peserta.byProposal', ['id_proposal' => $proposal->id_proposal]) }}">Lihat Semua</a>
         @if (session('error'))
             <div style="color: red; font-weight: bold;">
                 {{ session('error') }}
             </div>
         @endif
-
         @if($proposal->pesertas->count() > 0)
             <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; margin-top: 10px;">
                 <thead>
@@ -134,5 +165,28 @@
         <p>Proposal ini belum disetujui.</p>
     @endif
     <hr>
-    <a href="{{ route('proposals.index') }}">Kembali</a>
+    @if(auth('admin')->check())
+    <hr>
+    <h3>Pengaturan Divisi yang Boleh Melakukan Absensi</h3>
+    <form action="{{ route('absensiDivisi.store', $proposal->id_proposal) }}" method="POST">
+            @csrf
+            <div>
+                <p>Pilih Divisi yang bisa melakukan absensi panitia:</p>
+                @foreach ($divisis as $divisi)
+                    <label style="display: block; margin-bottom: 5px;">
+                        <input type="checkbox" name="divisi_id[]" value="{{ $divisi->id_divisi }}"
+                            {{ $proposal->divisiAbsensi->contains($divisi->id_divisi) ? 'checked' : '' }}>
+                        {{ $divisi->nama_divisi }}
+                    </label>
+                @endforeach
+            </div>
+            <button type="submit">Simpan Akses Absensi</button>
+        </form>
+    @endif
+    @if (auth('admin')->check())
+        <a href="{{ route('proposals.index') }}">Kembali</a>
+    @elseif (auth('panitia')->check() && in_array(auth('panitia')->user()->jabatan_panitia, ['ketua', 'sekretaris', 'bendahara']))
+        <a href="{{ route('proposal.panitia.show') }}">Kembali ke Proposal Saya</a>
+    @endif
+
 @endsection

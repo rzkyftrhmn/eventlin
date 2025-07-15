@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AuthAdminOrPanitiaSuper;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'cek.jabatan' => \App\Http\Middleware\CekJabatanPanitia::class,
             'guest' => RedirectIfAuthenticated::class,
             'auth' => Authenticate::class,
+            'auth.super'=>AuthAdminOrPanitiaSuper::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

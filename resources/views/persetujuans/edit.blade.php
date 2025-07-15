@@ -3,7 +3,7 @@
 @section('content')
     <h1>Edit Status Proposal</h1>
 
-    <form action="{{ route('persetujuans.update', $proposal->id_proposal) }}" method="POST">
+    <form action="{{ route('persetujuans.updateAkademik', $proposal->id_proposal) }}" method="POST">
         @csrf
         @method('PUT')
 
