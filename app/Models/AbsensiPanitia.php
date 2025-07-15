@@ -10,7 +10,8 @@ class AbsensiPanitia extends Model
     use HasFactory;
 
     protected $guarded = [];
-
+     protected $table = 'absensi_panitia';
+     
     public function panitia()
     {
         return $this->belongsTo(Panitia::class, 'id_panitia', 'id_panitia');

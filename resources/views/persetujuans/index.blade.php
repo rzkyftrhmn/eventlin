@@ -27,8 +27,8 @@
                 <td>{{ $proposal->judul_proposal }}</td>
                 <td>{{ $proposal->status_proposal }}</td>
                 <td>
-                    <a href="{{ route('proposals.show', $proposal->id_proposal) }}">Lihat Detail</a> |
-                    <a href="{{ route('persetujuans.edit', $proposal->id_proposal) }}">Edit Status</a> 
+                    <a href="{{ route('proposal.superpanitia.show', $proposal->id_proposal) }}">Lihat Detail</a> |
+                    <a href="{{ route('persetujuans.editAkademik', $proposal->id_proposal) }}">Edit Status</a> 
                 </td>
             </tr>
         @endforeach

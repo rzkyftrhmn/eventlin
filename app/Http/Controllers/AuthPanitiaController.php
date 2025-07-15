@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AuthPanitiaController extends Controller
 {
@@ -49,6 +50,7 @@ class AuthPanitiaController extends Controller
         if ($user->jabatan_panitia === 'akademik') {
             return redirect()->route('persetujuans.indexAkademik');
         }
-        return view('auth.panitia.dashboard', compact('user'));
+         $qrCode = QrCode::size(200)->generate($user->email);
+        return view('auth.panitia.dashboard', compact('user','qrCode'));
     }
 }

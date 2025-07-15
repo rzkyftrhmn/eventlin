@@ -44,20 +44,20 @@ class PersetujuanController extends Controller
 
         $proposal->status_proposal = $request->status_proposal;
         $proposal->save();
-
+        $userName=auth()->user()->nama_panitia;
         if ($request->status_proposal == 'Disetujui') {
             // Cek apakah sudah ada persetujuan sebelumnya
             if (!$proposal->persetujuan) {
                 Persetujuan::create([
                     'id_proposal' => $proposal->id_proposal,
-                    'pihak_penyetuju' => 'Pihak_Akademik', // Nanti diganti auth()->user()->name
+                    'pihak_penyetuju' => $userName,
                     'status_persetujuan' => null,
                     'tanggal_persetujuan' => now(),
                 ]);
             }
         }
 
-        return redirect()->route('persetujuans.index')->with('success', 'Status proposal berhasil diperbarui.');
+        return redirect()->route('persetujuans.indexAkademik')->with('success', 'Status proposal berhasil diperbarui.');
     }
 
     public function editStatus($id)
@@ -79,7 +79,7 @@ class PersetujuanController extends Controller
         $persetujuan->save();
     
        if (auth('admin')->check()) {
-            return redirect()->route('proposal.index')->with('success', 'Panitia berhasil dihapus.');
+            return redirect()->route('proposals.index')->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('proposal.panitia.show')->with('success', 'Panitia berhasil dihapus.');
         }

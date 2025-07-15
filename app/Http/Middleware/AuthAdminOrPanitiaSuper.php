@@ -19,8 +19,11 @@ class AuthAdminOrPanitiaSuper
             if (in_array($jabatan, ['ketua', 'sekretaris', 'bendahara'])) {
                 return $next($request);
             }
+            return abort(403, 'Anda tidak memiliki hak akses.');
         }
 
-        return redirect()->route('panitia.loginForm'); // Atau abort(403)
-    }
+        // Jika belum login sama sekali
+        return redirect()->guest(route('peserta.loginForm'));
+}
+
 }

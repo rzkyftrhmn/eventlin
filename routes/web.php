@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AbsensiAksesDivisiController;
+use App\Http\Controllers\AbsensiPanitiaController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\AuthPanitiaController;
@@ -105,11 +106,12 @@ Route::middleware(['auth:panitia'])->group(function () {
     //tampilan proposal
     Route::get('/proposal-ku', [ProposalController::class, 'showByPanitia'])->name('proposal.panitia.show');
     
+    Route::get('/panitia/superproposals/{id}', [ProposalController::class, 'show'])
+        ->name('proposal.superpanitia.show');
+    
     // Routes for ketua, sekretaris, bendahara
     Route::middleware(['cek.jabatan:ketua,sekretaris,bendahara'])->group(function () {
-    //show proposal
-        Route::get('/panitia/superproposals/{id}', [ProposalController::class, 'show'])
-            ->name('proposal.superpanitia.show');
+        //show proposal
 
     //persetujuan
         // Persetujuan internal (Ketua & Sekretaris)
@@ -201,13 +203,22 @@ Route::middleware(['auth.super'])->group(function () {
 //kuota
     Route::resource('kuota', KuotaPendaftaranController::class);
 //peserta
-    Route::resource('peserta', PesertaController::class);
-    Route::get('/proposals/{id_proposal}/peserta/create', [PesertaController::class, 'create'])->name('peserta.create');
+    // Route::resource('peserta', PesertaController::class);
+    Route::get('/proposals/{id_proposal}/peserta/created', [PesertaController::class, 'created'])->name('peserta.created');
     Route::post('/proposals/{id_proposal}/peserta', [PesertaController::class, 'store'])->name('peserta.store');
     Route::get('proposals/{id_proposal}/peserta', [PesertaController::class, 'indexByProposal'])->name('peserta.byProposal');
+    Route::get('/peserta/{nim}/edit', [PesertaController::class, 'edit'])->name('peserta.edit');
+    Route::put('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.update');
+    Route::delete('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.destroy');
+
 }); 
 
 
+// Halaman scan QR untuk absensi berdasarkan rundown
+Route::get('/absensi/scan/{id_rundown}', [AbsensiPanitiaController::class, 'scanForm'])->name('absensi.scan');
+
+// Menyimpan data absensi setelah scan QR
+Route::post('/absensi/store', [AbsensiPanitiaController::class, 'store'])->name('absensi.store');
 
 
 
@@ -266,7 +277,6 @@ Route::middleware(['auth.super'])->group(function () {
 // Lihat semua peserta pada proposal (untuk proposal public atau terdaftar)
 
 // Update data peserta (jika diizinkan)
-// Route::get('/peserta/{nim}/edit', [PesertaController::class, 'edit'])->name('peserta.edit');
-// Route::put('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.update');
+
 
 

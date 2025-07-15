@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Peserta;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule as ValidationRule;
 
 class PesertaController extends Controller
 {
@@ -57,12 +58,18 @@ class PesertaController extends Controller
 
     public function create($id_proposal)
     {
+        // dd(Auth::guard('panitia')->user());
         $proposal = Proposal::findOrFail($id_proposal);
         $kuota = $proposal->kuotaPendaftaran;
 
         if (!$kuota || $kuota->status_pendaftaran !== 'Buka' || $kuota->kuota_terpakai >= $kuota->total_kuota) {
-            return redirect()->route('proposals.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
-        }
+            if (auth('admin')->check()) {
+                return redirect()->route('proposal.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
+            } elseif (auth('panitia')->check()) {
+                return redirect()->route('proposal.superpanitia.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
+            }
+    }
+        
 
         return view('peserta.create', compact('proposal'));
     }
@@ -116,13 +123,13 @@ class PesertaController extends Controller
             'nim' => [
                 'required',
                 'string',
-                Validator::unique('pesertas', 'nim')->ignore($peserta->nim, 'nim')
+                ValidationRule::unique('pesertas', 'nim')->ignore($peserta->nim, 'nim')
             ],
             'nama_peserta' => 'required|string|max:255',
             'email' => [
             'required',
             'email',
-            Validator::unique('pesertas', 'email')->ignore($peserta->nim, 'nim')
+            ValidationRule::unique('pesertas', 'email')->ignore($peserta->nim, 'nim')
             ],
             'password' => [
                 'nullable',
@@ -135,7 +142,6 @@ class PesertaController extends Controller
             ],
             'tanggal_pendaftaran' => 'required|date',
         ]);
-
         
         $data = [
                 'nama_peserta' => $request->nama_peserta,
@@ -148,14 +154,16 @@ class PesertaController extends Controller
         }
 
         $peserta->update($data);
-
-        return redirect()->route('peserta.index')->with('success', 'Peserta berhasil diperbarui.');
+        
+        return redirect()->route('peserta.byProposal',$peserta->id_proposal)->with('success', 'Peserta berhasil diperbarui.');
     }
 
     public function destroy($nim)
     {
-        Peserta::destroy($nim);
-        return redirect()->route('peserta.index')->with('success', 'Peserta berhasil dihapus.');
+        $peserta = Peserta::findOrFail($nim);
+        $idProposal = $peserta->id_proposal;
+        Peserta::where('nim', $nim)->delete();
+        return redirect()->route('peserta.byProposal')->with('success', 'Peserta berhasil dihapus.');
     }
     
 }

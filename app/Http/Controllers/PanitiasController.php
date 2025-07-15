@@ -112,7 +112,7 @@ class PanitiasController extends Controller
         ]);
 
          if (auth('admin')->check()) {
-            return redirect()->route('proposal.byProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
+            return redirect()->route('panitia.byProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('panitia.SuperbyProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
         }
@@ -139,7 +139,7 @@ class PanitiasController extends Controller
                 'regex:/[a-z]/',        // Huruf kecil
                 'regex:/[A-Z]/',        // Huruf besar
                 'regex:/[0-9]/',        // Angka
-         
+                'confirmed'
             ],
             'jabatan_panitia' => 'required|in:Ketua,Sekretaris,Bendahara,Panitia,Akademik',
             'id_divisi' => 'nullable|required_if:jabatan_panitia,Panitia',
@@ -177,7 +177,7 @@ class PanitiasController extends Controller
         $panitia->update($data);
 
          if (auth('admin')->check()) {
-            return redirect()->route('proposal.byProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
+            return redirect()->route('panitia.byProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('panitia.SuperbyProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
         }
@@ -188,7 +188,8 @@ class PanitiasController extends Controller
         $panitia = Panitia::findOrFail($id_panitia);
         $proposalId = $panitia->id_proposal;
         $panitia->delete();
-            // Redirect dinamis tergantung siapa yang login
+
+        // Redirect dinamis tergantung siapa yang login
         if (auth('admin')->check()) {
             return redirect()->route('proposal.byProposal', $proposalId)->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {

@@ -13,7 +13,7 @@
     } elseif (auth('panitia')->check()) {
         $jabatan = strtolower(auth('panitia')->user()->jabatan_panitia);
 
-        if (in_array($jabatan, ['ketua', 'sekretaris', 'bendahara'])) {
+        if (in_array($jabatan, ['ketua', 'sekretaris', 'bendahara', 'akademik'])) {
             $routeTambahPanitia = route('panitia.Supercreate', $id_proposal);
             $routeShowPanitia = route('panitia.SuperbyProposal', $id_proposal); 
             $routeEditStatus = $proposal->persetujuans 
@@ -130,7 +130,7 @@
         @endif
         <hr>
      <h3>Peserta Acara</h3>
-        <a href="{{ route('peserta.create', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a><br>
+        <a href="{{ route('peserta.created', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a><br>
         <a href="{{ route('peserta.byProposal', ['id_proposal' => $proposal->id_proposal]) }}">Lihat Semua</a>
         @if (session('error'))
             <div style="color: red; font-weight: bold;">
@@ -183,10 +183,10 @@
             <button type="submit">Simpan Akses Absensi</button>
         </form>
     @endif
-    <hr>
     @if (auth('admin')->check())
         <a href="{{ route('proposals.index') }}">Kembali</a>
-    @elseif (auth('panitia')->check() && in_array(auth('panitia')->user()->jabatan_panitia, ['Ketua', 'Sekretaris', 'Bendahara']))
+    @elseif (auth('panitia')->check() && in_array(auth('panitia')->user()->jabatan_panitia, ['ketua', 'sekretaris', 'bendahara']))
         <a href="{{ route('proposal.panitia.show') }}">Kembali ke Proposal Saya</a>
     @endif
+
 @endsection
