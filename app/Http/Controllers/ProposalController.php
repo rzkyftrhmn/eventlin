@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Divisi;
 use App\Models\KuotaPendaftaran;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
@@ -77,7 +78,7 @@ class ProposalController extends Controller
         }
         
         $proposal->save();
-
+        
         // Buat data kuota kosong otomatis
         KuotaPendaftaran::create([
             'id_proposal' => $proposal->id_proposal,
@@ -91,8 +92,10 @@ class ProposalController extends Controller
 
     public function show($id)
     {
-        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi','kuotaPendaftaran','pesertas'])->findOrFail($id);
-        return view('proposals.show', compact('proposal'));
+        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi','kuotaPendaftaran','pesertas','divisiAbsensi'])->findOrFail($id);
+        $divisis = Divisi::all(); // ambil semua divisi
+
+        return view('proposals.show', compact('proposal','divisis'));
     }
 
     public function showPanitia($id)

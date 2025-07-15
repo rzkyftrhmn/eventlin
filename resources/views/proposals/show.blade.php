@@ -2,12 +2,13 @@
 @extends('layouts.app')
 @php
     $id_proposal = $proposal->id_proposal;
-
     // Route untuk kembali ke detail proposal
     if (auth('admin')->check()) {
         $routeTambahPanitia = route('panitia.create', $id_proposal);
         $routeShowPanitia = route('panitia.byProposal', $id_proposal); 
-        $routeEditStatus =  route('persetujuans.editStatus', $proposal->persetujuans->id_persetujuan);
+        $routeEditStatus =  $proposal->persetujuans 
+                            ? route('persetujuans.editStatus', $proposal->persetujuans->id_persetujuan)
+                            : null;
         $routeCreateRundown = route('rundowns.createRundown', $id_proposal);
     } elseif (auth('panitia')->check()) {
         $jabatan = strtolower(auth('panitia')->user()->jabatan_panitia);
@@ -15,7 +16,9 @@
         if (in_array($jabatan, ['ketua', 'sekretaris', 'bendahara'])) {
             $routeTambahPanitia = route('panitia.Supercreate', $id_proposal);
             $routeShowPanitia = route('panitia.SuperbyProposal', $id_proposal); 
-            $routeEditStatus = route('persetujuans.SupereditStatus', $proposal->persetujuans->id_persetujuan);
+            $routeEditStatus = $proposal->persetujuans 
+                               ? route('persetujuans.SupereditStatus', $proposal->persetujuans->id_persetujuan)
+                               : null;
             $routeCreateRundown = route('rundowns.SuperCreateRundown', $id_proposal);
         } else {
             $routeBack = route('proposal.panitia.show.read', ['id' => $id_proposal]);
@@ -160,6 +163,25 @@
     @else
         <p>Status proposal: {{ $proposal->status_proposal }}</p>
         <p>Proposal ini belum disetujui.</p>
+    @endif
+    <hr>
+    @if(auth('admin')->check())
+    <hr>
+    <h3>Pengaturan Divisi yang Boleh Melakukan Absensi</h3>
+    <form action="{{ route('absensiDivisi.store', $proposal->id_proposal) }}" method="POST">
+            @csrf
+            <div>
+                <p>Pilih Divisi yang bisa melakukan absensi panitia:</p>
+                @foreach ($divisis as $divisi)
+                    <label style="display: block; margin-bottom: 5px;">
+                        <input type="checkbox" name="divisi_id[]" value="{{ $divisi->id_divisi }}"
+                            {{ $proposal->divisiAbsensi->contains($divisi->id_divisi) ? 'checked' : '' }}>
+                        {{ $divisi->nama_divisi }}
+                    </label>
+                @endforeach
+            </div>
+            <button type="submit">Simpan Akses Absensi</button>
+        </form>
     @endif
     <hr>
     @if (auth('admin')->check())

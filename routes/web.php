@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsensiAksesDivisiController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\AuthPanitiaController;
@@ -79,6 +80,10 @@ Route::middleware(['auth:admin'])->group(function () {
     // create Rundown
     Route::get('/proposals/{id_proposal}/rundowns/create', [RundownController::class, 'createRundown'])
         ->name('rundowns.createRundown');
+
+// pemilihan absensi
+    Route::post('/proposal/{id_proposal}/atur-absensi-divisi', [AbsensiAksesDivisiController::class, 'store'])->name('absensiDivisi.store');
+
 });
 
 

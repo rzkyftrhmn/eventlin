@@ -36,4 +36,9 @@ class Proposal extends Model
     {
         return $this->hasMany(Panitia::class, 'id_proposal', 'id_proposal');
     }
+
+    public function divisiAbsensi()
+    {
+        return $this->belongsToMany(Divisi::class, 'absensi_akses_divisis', 'id_proposal', 'id_divisi');
+    }
 }

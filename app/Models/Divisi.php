@@ -20,4 +20,9 @@ class Divisi extends Model
     {
         return $this->hasMany(Panitia::class, 'id_divisi', 'id_divisi');
     }
+
+    public function proposalsWithAbsensi()
+    {
+        return $this->belongsToMany(Proposal::class, 'absensi_akses_divisis', 'divisi_id', 'proposal_id');
+    }
 }
