@@ -2,7 +2,17 @@
 
 @section('content')
     <h2>Edit Rundown</h2>
-
+    {{-- Tampilkan error validasi jika ada --}}
+    @if ($errors->any())
+        <div style="color: red; font-weight: bold;">
+            <p>Terjadi kesalahan:</p>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form action="{{ route('rundowns.update', $rundown->id_rundown) }}" method="POST">
         @csrf
         @method('PUT')
@@ -14,7 +24,7 @@
 
         <div>
             <label>Tanggal Kegiatan:</label>
-            <input type="date" name="tanggal_kegiatan" value="{{ old('tanggal_kegiatan', $rundown->tanggal_kegiatan) }}" required>
+            <input type="date" name="tanggal_kegiatan" required min="{{ date('Y-m-d') }}">
         </div>
 
         <button type="submit">Simpan</button>

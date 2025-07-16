@@ -34,7 +34,7 @@
     <textarea name="kebutuhan_logistik" required>{{ old('kebutuhan_logistik', $proposal->kebutuhan_logistik ?? '') }}</textarea><br>
 
     <label>Tanggal Acara:</label>
-    <input type="date" name="tanggal_acara" value="{{ old('tanggal_acara', $proposal->tanggal_acara ?? '') }}" required><br>
+    <input type="date" name="tanggal_acara" value="{{ old('tanggal_acara', $proposal->tanggal_acara ?? '') }}" required min="{{date('Y-m-d')}}"><br>
 
     <label>Waktu Acara:</label>
     <input type="time" name="waktu_acara" value="{{ old('waktu_acara', $proposal->waktu_acara ?? '') }}" required><br>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_absensi');
             $table->unsignedBigInteger('id_panitia');
             $table->foreign('id_panitia')->references('id_panitia')->on('panitia')->onDelete('cascade');
-            $table->unsignedBigInteger('id_rundown')->nullable()->after('id_panitia');
+            $table->unsignedBigInteger('id_rundown')->nullable();
             $table->foreign('id_rundown')->references('id_rundown')->on('rundowns')->onDelete('cascade');
             $table->enum('status_kehadiran', ['Hadir', 'Tidak Hadir', 'Izin', 'Terlambat']);
             $table->time('waktu_absen');

@@ -68,7 +68,7 @@ class PesertaController extends Controller
             } elseif (auth('panitia')->check()) {
                 return redirect()->route('proposal.superpanitia.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
             }
-    }
+        }
         
 
         return view('peserta.create', compact('proposal'));
@@ -87,7 +87,6 @@ class PesertaController extends Controller
             'nim' => 'required|string|unique:pesertas,nim',
             'nama_peserta' => 'required|string|max:255',
             'email' => 'required|email|unique:pesertas,email',
-            'tanggal_pendaftaran' => 'required|date',
             'password' => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/',
         ]);
 
@@ -96,18 +95,19 @@ class PesertaController extends Controller
             'id_proposal' => $id_proposal,
             'nama_peserta' => $request->nama_peserta,
             'email' => $request->email,
-            'tanggal_pendaftaran' => $request->tanggal_pendaftaran,
+            'tanggal_pendaftaran' => now()->toDateString(), 
             'password' => Hash::make($request->password),
         ]);
 
         $kuota->increment('kuota_terpakai');
 
         if (auth('admin')->check()) {
-            return redirect()->route('proposal.show', $id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+            return redirect()->route('proposal.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
         } elseif (auth('panitia')->check()) {
-            return redirect()->route('proposal.superpanitia.show', $id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
+            return redirect()->route('proposal.superpanitia.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
         }
     }
+
 
     public function edit($nim)
     {
@@ -127,35 +127,35 @@ class PesertaController extends Controller
             ],
             'nama_peserta' => 'required|string|max:255',
             'email' => [
-            'required',
-            'email',
-            ValidationRule::unique('pesertas', 'email')->ignore($peserta->nim, 'nim')
+                'required',
+                'email',
+                ValidationRule::unique('pesertas', 'email')->ignore($peserta->nim, 'nim')
             ],
             'password' => [
                 'nullable',
                 'string',
                 'min:8',
                 'confirmed',
-                'regex:/[a-z]/',    // huruf kecil
-                'regex:/[A-Z]/',    // huruf besar
-                'regex:/[0-9]/',    // angka
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
             ],
-            'tanggal_pendaftaran' => 'required|date',
+            // tanggal_pendaftaran dihapus dari validasi
         ]);
-        
+
         $data = [
-                'nama_peserta' => $request->nama_peserta,
-                'email' => $request->email,
-                'tanggal_pendaftaran' => $request->tanggal_pendaftaran,
-            ];
+            'nama_peserta' => $request->nama_peserta,
+            'email' => $request->email,
+            // 'tanggal_pendaftaran' tidak dimasukkan
+        ];
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 
         $peserta->update($data);
-        
-        return redirect()->route('peserta.byProposal',$peserta->id_proposal)->with('success', 'Peserta berhasil diperbarui.');
+
+        return redirect()->route('peserta.byProposal', $peserta->id_proposal)->with('success', 'Peserta berhasil diperbarui.');
     }
 
     public function destroy($nim)

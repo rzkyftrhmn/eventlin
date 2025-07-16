@@ -54,7 +54,7 @@ class ProposalController extends Controller
             'file_proposal' => 'required|mimes:pdf,doc,docx|max:20480',
             'estimasi_peserta' => 'required|integer',
             'kebutuhan_logistik' => 'required',
-            'tanggal_acara' => 'required|date',
+            'tanggal_acara' => 'required|date|after_or_equal:today',
             'waktu_acara' => 'required',
             'detail_acara' => 'required',
         ]);
@@ -121,7 +121,7 @@ class ProposalController extends Controller
             'file_proposal' => 'nullable|mimes:pdf,doc,docx|max:20480',
             'estimasi_peserta' => 'required|integer',
             'kebutuhan_logistik' => 'required|string',
-            'tanggal_acara' => 'required|date',
+            'tanggal_acara' => 'required|date|after_or_equal:today',
             'waktu_acara' => 'required',
             'detail_acara' => 'required|string',
         ]);

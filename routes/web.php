@@ -150,6 +150,15 @@ Route::middleware(['auth:panitia'])->group(function () {
         //show panitia
         Route::get('/panitia/proposals/{id}/read', [ProposalController::class, 'showPanitia'])
             ->name('proposal.panitia.show.read');
+        //rundown
+        Route::get('/rundowns/panitia/{id}', [RundownController::class, 'show'])
+            ->name('rundowns.panitia.show');
+        // Halaman scan QR untuk absensi berdasarkan rundown
+        Route::get('/absensi/scan/{id_rundown}', [AbsensiPanitiaController::class, 'scanForm'])
+            ->name('absensi.scan');
+        // Menyimpan data absensi setelah scan QR
+        Route::post('/absensi/store', [AbsensiPanitiaController::class, 'store'])
+            ->name('absensi.store');
     });
 
     //routes panitia akademik
@@ -204,22 +213,17 @@ Route::middleware(['auth.super'])->group(function () {
     Route::resource('kuota', KuotaPendaftaranController::class);
 //peserta
     // Route::resource('peserta', PesertaController::class);
-    Route::get('/proposals/{id_proposal}/peserta/created', [PesertaController::class, 'created'])->name('peserta.created');
+    Route::get('/proposals/{id_proposal}/peserta/created', [PesertaController::class, 'create'])->name('peserta.created');
     Route::post('/proposals/{id_proposal}/peserta', [PesertaController::class, 'store'])->name('peserta.store');
     Route::get('proposals/{id_proposal}/peserta', [PesertaController::class, 'indexByProposal'])->name('peserta.byProposal');
     Route::get('/peserta/{nim}/edit', [PesertaController::class, 'edit'])->name('peserta.edit');
     Route::put('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.update');
     Route::delete('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.destroy');
-//rundown
-    Route::get('/rundowns/panitia/{id}', [RundownController::class, 'show'])->name('rundowns.panitia.show');
+
 }); 
 
 
-// Halaman scan QR untuk absensi berdasarkan rundown
-Route::get('/absensi/scan/{id_rundown}', [AbsensiPanitiaController::class, 'scanForm'])->name('absensi.scan');
 
-// Menyimpan data absensi setelah scan QR
-Route::post('/absensi/store', [AbsensiPanitiaController::class, 'store'])->name('absensi.store');
 
 
 

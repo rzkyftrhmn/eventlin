@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Tambah Rundown untuk: {{ $proposal->nama_acara }}</h1>
-
+    
     @if ($errors->any())
         <div style="color:red;">
             <ul>
@@ -24,9 +24,8 @@
 
         <div>
             <label>Tanggal Kegiatan:</label>
-            <input type="date" name="tanggal_kegiatan" required>
+            <input type="date" name="tanggal_kegiatan" required min="{{ date('Y-m-d') }}">
         </div>
-
         <button type="submit">Simpan</button>
     </form>
 @endsection
