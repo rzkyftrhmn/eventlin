@@ -40,7 +40,7 @@
                             <td>{{ $rundown->judul_rundown }}</td>
                             <td>{{ $rundown->tanggal_kegiatan }}</td>
                             <td>
-                                <a href="{{ route('rundowns.show', $rundown->id_rundown) }}">Lihat</a> |
+                                <a href="{{ route('rundowns.panitia.show', $rundown->id_rundown) }}">Lihat</a> |
                                 @if(in_array($divisiPanitia, $divisiBolehAbsen))
                                     <a href="{{ route('absensi.scan', $rundown->id_rundown) }}" class="btn btn-primary">Mulai Absensi</a>
                                 @else
