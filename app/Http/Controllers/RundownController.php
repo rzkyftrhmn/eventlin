@@ -24,7 +24,11 @@ class RundownController extends Controller
         $request->validate([
             'id_proposal' => 'required|exists:proposals,id_proposal',
             'judul_rundown' => 'required|string|max:255',
-            'tanggal_kegiatan' => 'required|date|after_or_equal:today',
+            'tanggal_kegiatan' => [
+                'required',
+                'date',
+                'after_or_equal:' . Proposal::find($request->id_proposal)?->tanggal_acara ?? today(),
+            ],
         ]);
 
         // Cek tanggal sudah dipakai oleh rundown lain pada proposal yang sama
@@ -66,7 +70,11 @@ class RundownController extends Controller
     {
         $request->validate([
             'judul_rundown' => 'required|string|max:255',
-            'tanggal_kegiatan' => 'required|date|after_or_equal:today',
+            'tanggal_kegiatan' => [
+                'required',
+                'date',
+                'after_or_equal:' . Proposal::find($request->id_proposal)?->tanggal_acara ?? today(),
+            ],
         ]);
 
         $rundown = Rundown::findOrFail($id);
