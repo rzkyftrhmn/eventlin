@@ -210,7 +210,8 @@ Route::middleware(['auth.super'])->group(function () {
     Route::get('/peserta/{nim}/edit', [PesertaController::class, 'edit'])->name('peserta.edit');
     Route::put('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.update');
     Route::delete('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.destroy');
-
+//rundown
+    Route::get('/rundowns/panitia/{id}', [RundownController::class, 'show'])->name('rundowns.panitia.show');
 }); 
 
 
