@@ -22,9 +22,19 @@
                                     ->pluck('id_divisi')
                                     ->toArray();
         @endphp
-
-
         <h3>Rundown Acara</h3>
+        @if (session('success'))
+            <div style="color: green; margin-bottom: 10px;">
+                {{ session('success') }}
+            </div>
+        @endif
+        
+        @if (session('error'))
+            <div style="color: red; margin-bottom: 10px;">
+                {{ session('error') }}
+            </div>
+        @endif
+
         @if ($proposal->rundowns->count())
             <table border="1" cellpadding="10" cellspacing="0" style="margin-top: 10px; width: 100%;">
                 <thead>
@@ -42,7 +52,7 @@
                             <td>
                                 <a href="{{ route('rundowns.panitia.show', $rundown->id_rundown) }}">Lihat</a> |
                                 @if(in_array($divisiPanitia, $divisiBolehAbsen))
-                                    <a href="{{ route('absensi.scan', $rundown->id_rundown) }}" class="btn btn-primary">Mulai Absensi</a>
+                                    <a href="{{ route('absensi.rekap', $rundown->id_rundown) }}" class="btn btn-primary">Mulai Absensi</a>
                                 @else
                                     
                                 @endif

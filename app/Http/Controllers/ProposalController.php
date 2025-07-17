@@ -143,7 +143,6 @@ class ProposalController extends Controller
 
             $proposal->file_proposal = 'uploads/' . $fileName;
         }
-        $proposal->status_proposal = 'Diajukan'; 
         $proposal->tanggal_pengajuan = now();
         $proposal->save();
 

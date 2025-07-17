@@ -32,6 +32,18 @@
 @endphp
 
 @section('content')
+    
+    @if (session('success'))
+        <div style="color: green; margin-bottom: 10px;">
+            {{ session('success') }}
+        </div>
+    @endif
+    
+    @if (session('error'))
+        <div style="color: red; margin-bottom: 10px;">
+            {{ session('error') }}
+        </div>
+    @endif
     <h1>Detail Proposal</h1>
 
     <p><strong>Nama Acara:</strong> {{ $proposal->nama_acara }}</p>
@@ -105,6 +117,7 @@
                             <td>
                                 <a href="{{ route('rundowns.show', $rundown->id_rundown) }}">Lihat</a> |
                                 <a href="{{ route('rundowns.edit', $rundown->id_rundown) }}">Edit</a> |
+                                <a href="{{ route('rekap.rundown', $rundown->id_rundown) }}">Rekap</a> |
                                 <form action="{{ route('rundowns.destroy', $rundown->id_rundown) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -174,7 +187,7 @@
                 <p>Pilih Divisi yang bisa melakukan absensi panitia:</p>
                 @foreach ($divisis as $divisi)
                     <label style="display: block; margin-bottom: 5px;">
-                        <input type="checkbox" name="divisi_id[]" value="{{ $divisi->id_divisi }}"
+                        <input type="radio" name="divisi_id[]" value="{{ $divisi->id_divisi }}"
                             {{ $proposal->divisiAbsensi->contains($divisi->id_divisi) ? 'checked' : '' }}>
                         {{ $divisi->nama_divisi }}
                     </label>

@@ -32,8 +32,8 @@
                     <tr>
                         <td>{{ $p->nama_panitia }}</td>
                         <td>{{ $p->jabatan_panitia }}</td>
+                        <td>{{$p->email}}</td>
                         <td>{{ $p->divisi->nama_divisi ?? '-' }}</td>
-                        <td>{{$p->divisi->email}}</td>
                         <td>{{ $p->proposal->nama_acara ?? '-' }}</td>
                     </tr>
                 @endforeach

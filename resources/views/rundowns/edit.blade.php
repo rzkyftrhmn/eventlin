@@ -26,7 +26,7 @@
             <label>Tanggal Kegiatan:</label>
             <input type="date" name="tanggal_kegiatan" <input type="date" name="tanggal_kegiatan"
                     value="{{ old('tanggal_kegiatan', $rundown->tanggal_kegiatan ?? '') }}"
-                    min="{{ $proposal->tanggal_acara ?? date('Y-m-d') }}" required>">
+                    min="{{ $proposal->tanggal_acara ?? date('Y-m-d') }}" required>
         </div>
 
         <button type="submit">Simpan</button>

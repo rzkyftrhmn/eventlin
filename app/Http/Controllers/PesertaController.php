@@ -158,6 +158,18 @@ class PesertaController extends Controller
         return redirect()->route('peserta.byProposal', $peserta->id_proposal)->with('success', 'Peserta berhasil diperbarui.');
     }
 
+    public function show($nim)
+    {
+        $peserta = Peserta::with('proposal')->findOrFail($nim);
+
+        // Jika peserta login, hanya bisa lihat profil sendiri
+        if (auth('peserta')->check() && auth('peserta')->id() != $peserta->nim) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        return view('peserta.show', compact('peserta'));
+    }
+
     public function destroy($nim)
     {
         $peserta = Peserta::findOrFail($nim);

@@ -8,6 +8,11 @@
             {{ session('success') }}
         </div>
     @endif
+    @if (session('error'))
+        <div style="color: red; margin-bottom: 10px;">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <form action="{{ route('proposals.index') }}" method="GET" style="margin-bottom: 15px;">
         <select name="status_filter">
