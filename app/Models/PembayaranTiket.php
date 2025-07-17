@@ -15,4 +15,9 @@ class PembayaranTiket extends Model
     {
         return $this->belongsTo(Peserta::class, 'nim', 'nim');
     }
+
+    public function proposal()
+    {
+        return $this->belongsTo(Proposal::class, 'id_proposal', 'id_proposal');
+    }
 }

@@ -57,6 +57,11 @@ class ProposalController extends Controller
             'tanggal_acara' => 'required|date|after_or_equal:today',
             'waktu_acara' => 'required',
             'detail_acara' => 'required',
+            'is_berbayar' => 'required|boolean',
+            'harga_tiket' => 'required_if:is_berbayar,1|nullable|numeric|min:0',
+            'nama_bank' => 'required_if:is_berbayar,1|nullable|string',
+            'nomor_rekening' => 'required_if:is_berbayar,1|nullable|string',
+            'nama_pemilik_rekening' => 'required_if:is_berbayar,1|nullable|string',
         ]);
 
         $proposal = new Proposal($request->except('file_proposal'));
@@ -89,26 +94,7 @@ class ProposalController extends Controller
         
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil disimpan!');
     }
-
-    public function show($id)
-    {
-        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi','kuotaPendaftaran','pesertas','divisiAbsensi'])->findOrFail($id);
-        $divisis = Divisi::all(); // ambil semua divisi
-
-        return view('proposals.show', compact('proposal','divisis'));
-    }
-
-    public function showPanitia($id)
-    {
-        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi','kuotaPendaftaran','pesertas'])->findOrFail($id);
-        return view('proposals.showPanitia', compact('proposal'));
-    }
     
-    public function edit(Proposal $proposal)
-    {
-        return view('proposals.edit', compact('proposal'));
-    }
-
     public function update(Request $request, string $id)
     {
        $proposal = Proposal::findOrFail($id);
@@ -124,6 +110,11 @@ class ProposalController extends Controller
             'tanggal_acara' => 'required|date|after_or_equal:today',
             'waktu_acara' => 'required',
             'detail_acara' => 'required|string',
+            'is_berbayar' => 'required|boolean',
+            'harga_tiket' => 'required_if:is_berbayar,1|nullable|numeric|min:0',
+            'nama_bank' => 'required_if:is_berbayar,1|nullable|string',
+            'nomor_rekening' => 'required_if:is_berbayar,1|nullable|string',
+            'nama_pemilik_rekening' => 'required_if:is_berbayar,1|nullable|string',
         ]);
 
         $proposal->fill($request->except('file_proposal'));
@@ -148,6 +139,26 @@ class ProposalController extends Controller
 
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil diperbarui.');
     }
+
+    public function show($id)
+    {
+        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi','kuotaPendaftaran','pesertas','divisiAbsensi'])->findOrFail($id);
+        $divisis = Divisi::all(); // ambil semua divisi
+
+        return view('proposals.show', compact('proposal','divisis'));
+    }
+
+    public function showPanitia($id)
+    {
+        $proposal = Proposal::with(['persetujuans','rundowns','panitia.divisi','kuotaPendaftaran','pesertas'])->findOrFail($id);
+        return view('proposals.showPanitia', compact('proposal'));
+    }
+    
+    public function edit(Proposal $proposal)
+    {
+        return view('proposals.edit', compact('proposal'));
+    }
+
 
     public function destroy(Proposal $proposal)
     {

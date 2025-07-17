@@ -12,7 +12,14 @@
     <p><strong>Tanggal Acara:</strong> {{ $proposal->tanggal_acara }}</p>
     <p><strong>Waktu Acara:</strong> {{ $proposal->waktu_acara }}</p>
     <p><strong>Detail Acara:</strong> {{ $proposal->detail_acara }}</p>
-    <p><strong>Tanggal Pengajuan:</strong> {{ $proposal->tanggal_pengajuan }}</p>  
+    <p><strong>Tanggal Pengajuan:</strong> {{ $proposal->tanggal_pengajuan }}</p>
+    <p><strong>Jenis Acara:</strong> {{ $proposal->is_berbayar ? 'Berbayar' : 'Gratis' }}</p>
+    @if ($proposal->is_berbayar)
+        <p><strong>Harga Tiket:</strong> {{ $proposal->harga_tiket }}</p>
+        <p><strong>Nama Bank:</strong> {{ $proposal->nama_bank }}</p>
+        <p><strong>Nomor Rekening:</strong> {{ $proposal->nomor_rekening }}</p>
+        <p><strong>Nama Pemilik Rekening:</strong> {{ $proposal->nama_pemilik_rekening }}</p>
+    @endif    
     <hr>
     @if($proposal->status_proposal === 'Disetujui' && $proposal->persetujuans)
         @php

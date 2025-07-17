@@ -13,6 +13,7 @@ use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\RundownController;
 use App\Http\Controllers\PanitiasController;
+use App\Http\Controllers\PembayaranTiketController;
 use App\Http\Controllers\PesertaController;
 use Illuminate\Support\Facades\Route;
 
@@ -170,6 +171,7 @@ Route::middleware(['auth:panitia'])->group(function () {
         // Halaman input manual absensi
         Route::post('/absensi/manual', [AbsensiPanitiaController::class, 'manual'])
             ->name('absensi.manual'); // untuk input manual
+        
     });
 
     //routes panitia akademik
@@ -203,9 +205,13 @@ Route::middleware('auth:peserta')->group(function () {
     Route::get('/dashboard/peserta', [AuthPesertaController::class, 'dashboard'])->name('peserta.dashboard');
     //log out peserta
     Route::post('/logout/peserta', [AuthPesertaController::class, 'logout'])->name('peserta.logout');
-    
     Route::get('/peserta/profile/{nim}', [PesertaController::class, 'show'])->name('peserta.profile');
-
+    Route::get('/proposal/konfirmasi/{id}', [PembayaranTiketController::class, 'konfirmasi'])
+        ->name('pembayaran.konfirmasi');
+    Route::get('/proposal/{id_proposal}/pembayaran', [PembayaranTiketController::class, 'index'])
+            ->name('peserta.pembayaran.index');
+    Route::post('/proposal/{id_proposal}/pembayaran', [PembayaranTiketController::class, 'store'])
+        ->name('peserta.pembayaran.store');
 });
 
 
@@ -243,7 +249,10 @@ Route::middleware(['auth.super'])->group(function () {
     // Untuk export PDF
     Route::get('/rekap/rundown/{id_rundown}/pdf', [AbsensiPanitiaController::class, 'exportPdf'])
         ->name('absensi.rekap.pdf');
-
+    Route::get('/admin/proposal/{id_proposal}/pembayaran', [\App\Http\Controllers\PembayaranTiketController::class, 'index'])
+        ->name('admin.pembayaran.index');
+    Route::patch('/admin/pembayaran/{id}/status', [\App\Http\Controllers\PembayaranTiketController::class, 'updateStatus'])
+        ->name('admin.pembayaran.updateStatus');
 }); 
 
 

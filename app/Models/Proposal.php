@@ -41,4 +41,9 @@ class Proposal extends Model
     {
         return $this->belongsToMany(Divisi::class, 'absensi_akses_divisis', 'id_proposal', 'id_divisi');
     }
+
+     public function pembayaranTikets()
+    {
+        return $this->hasMany(PembayaranTiket::class, 'id_proposal', 'id_proposal');
+    }
 }
