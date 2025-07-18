@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class PembayaranTiket extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'id_pembayaran'; // ✅ Tambahkan ini
+    public $incrementing = true;
 
     protected $guarded = [];
 

@@ -151,6 +151,13 @@ Route::middleware(['auth:panitia'])->group(function () {
         
     });
 
+    //routes panitia bendahara
+    Route::middleware(['cek.jabatan:bendahara'])->group(function(){
+         Route::get('/halaman-verifikisi/{id}', [PembayaranTiketController::class, 'index'])->name('pembayaran.verifikasi');
+         Route::put('/verifikasi-pembayaran/{id}', [PembayaranTiketController::class, 'updateStatus'])->name('verifikasi.pembayaran.update');
+
+    });
+
     //routes panitia biasa
     Route::middleware(['cek.jabatan:panitia'])->group(function () {
         //show panitia
@@ -204,14 +211,25 @@ Route::middleware('auth:peserta')->group(function () {
     //dashboard peserta
     Route::get('/dashboard/peserta', [AuthPesertaController::class, 'dashboard'])->name('peserta.dashboard');
     //log out peserta
-    Route::post('/logout/peserta', [AuthPesertaController::class, 'logout'])->name('peserta.logout');
-    Route::get('/peserta/profile/{nim}', [PesertaController::class, 'show'])->name('peserta.profile');
-    Route::get('/proposal/upload-form/{id}', [PembayaranTiketController::class, 'uploadForm'])
-        ->name('pembayaran.uploadForm');
+    Route::post('/logout/peserta', [AuthPesertaController::class, 'logout'])
+        ->name('peserta.logout');
+    Route::get('/peserta/profile/{nim}', [PesertaController::class, 'show'])
+        ->name('peserta.profile');
+    Route::get('/pembayaran/konfirmasi/{nim}', [PembayaranTiketController::class, 'konfirmasi'])
+        ->name('pembayaran.konfirmasi');
+    Route::get('/pembayaran/form_bayar/{id}', [PembayaranTiketController::class, 'uploudForm'])
+        ->name('pembayaran.bayar');
+    Route::post('pembayaran/upload-form/{id_proposal}',action:[PembayaranTiketController::class,'store'])
+        ->name('pembayaran.uploadForm.store');
+
+    Route::get('/pembayaran/tiket/{id}', [PembayaranTiketController::class, 'tiket'])
+        ->name('pembayaran.tiket');
     Route::get('/proposal/{id_proposal}/pembayaran', [PembayaranTiketController::class, 'index'])
             ->name('peserta.pembayaran.index');
     Route::post('/proposal/{id_proposal}/pembayaran', [PembayaranTiketController::class, 'store'])
         ->name('peserta.pembayaran.store');
+    Route::get('/pembayaran/tiket/{id}/download', [PembayaranTiketController::class, 'downloadTiket'])
+        ->name('pembayaran.download');
 });
 
 
@@ -238,7 +256,7 @@ Route::middleware(['auth.super'])->group(function () {
     // Route::resource('peserta', PesertaController::class);
     Route::get('/proposals/{id_proposal}/peserta/created', [PesertaController::class, 'create'])->name('peserta.created');
     Route::post('/proposals/{id_proposal}/peserta', [PesertaController::class, 'store'])->name('peserta.store');
-    Route::get('proposals/{id_proposal}/peserta', [PesertaController::class, 'indexByProposal'])->name('peserta.byProposal');
+    Route::get('proposals/{id_proposal}/pesertas', [PesertaController::class, 'indexByProposal'])->name('peserta.byProposal');
     Route::get('/peserta/{nim}/edit', [PesertaController::class, 'edit'])->name('peserta.edit');
     Route::put('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.update');
     Route::delete('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.destroy');
