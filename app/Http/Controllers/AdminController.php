@@ -7,6 +7,8 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule as ValidationRule;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class AdminController extends Controller
 {

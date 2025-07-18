@@ -8,11 +8,13 @@ use App\Models\Proposal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProposalController extends Controller
 {
     public function index(Request $request)
     {
+        
         $search = $request->input('search');
         $status = $request->input('status_filter');
 
@@ -87,6 +89,7 @@ class ProposalController extends Controller
             'status_pendaftaran' => 'Tutup',
         ]);
         
+        Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil disimpan!');
     }
 
@@ -147,6 +150,7 @@ class ProposalController extends Controller
         $proposal->tanggal_pengajuan = now();
         $proposal->save();
 
+        Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil diperbarui.');
     }
 
@@ -157,6 +161,8 @@ class ProposalController extends Controller
         }
         
         $proposal->delete();
+
+        Alert::alert('Sukses', 'Data Berhasil Dihapus!', 'success');
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil dihapus.');
     }
 

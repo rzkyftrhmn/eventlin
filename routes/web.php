@@ -95,6 +95,7 @@ Route::middleware(['auth:admin'])->group(function () {
 Route::middleware('guest:panitia')->group(function () {
     Route::get('/login/panitia', [AuthPanitiaController::class, 'showLoginForm'])->name('panitia.loginForm');
     Route::post('/login/panitia', [AuthPanitiaController::class, 'login'])->name('panitia.login');
+    
 });
 
 // kondisi ketika panitia sudah login

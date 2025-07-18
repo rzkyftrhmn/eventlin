@@ -10,7 +10,7 @@ class AbsensiPanitia extends Model
     use HasFactory;
 
     protected $guarded = [];
-     protected $table = 'absensi_panitia';
+    protected $table = 'absensi_panitia';
      
     public function panitia()
     {

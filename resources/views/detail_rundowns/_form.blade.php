@@ -1,9 +1,7 @@
-@csrf
-
-<div>
-    <label for="id_divisi">Divisi</label>
-    <select name="id_divisi" required>
-        <option value="">-- Pilih Divisi --</option>
+<div class="form-group">
+    <label class="form-label">Divisi :</label>
+    <select name="id_divisi" class="form-control form-select select2" id="id_divisi" style="width: 30%;" required>
+        <option value="" disabled selected>Pilih Divisi</option>
         @foreach ($divisis as $divisi)
             <option value="{{ $divisi->id_divisi }}" 
                 {{ (isset($detailRundown) && $detailRundown->id_divisi == $divisi->id_divisi) ? 'selected' : '' }}>
@@ -13,24 +11,22 @@
     </select>
 </div>
 
-<div>
-    <label for="judul_rundown">Judul Kegiatan</label>
-    <input type="text" name="judul_rundown" value="{{ $detailRundown->judul_rundown ?? '' }}" required>
+<div class="form-group">
+    <label class="form-label">Judul Kegiatan :</label>
+    <input class="form-control" type="text" name="judul_rundown" value="{{ $detailRundown->judul_rundown ?? '' }}" required>
 </div>
 
-<div>
-    <label for="jam_awal">Jam Mulai</label>
-    <input type="time" name="jam_awal" value="{{ $detailRundown->jam_awal ?? '' }}" required>
+<div class="form-group">
+    <label class="form-label">Jam Mulai :</label>
+    <input class="form-control" type="time" name="jam_awal" value="{{ $detailRundown->jam_awal ?? '' }}" style="width: 30%;" required>
 </div>
 
-<div>
-    <label for="jam_akhir">Jam Selesai</label>
-    <input type="time" name="jam_akhir" value="{{ $detailRundown->jam_akhir ?? '' }}" required>
+<div class="form-group">
+    <label class="form-label">Jam Selesai :</label>
+    <input class="form-control" type="time" name="jam_akhir" value="{{ $detailRundown->jam_akhir ?? '' }}" style="width: 30%;" required>
 </div>
 
-<div>
-    <label for="detail_kegiatan">Detail Kegiatan</label>
-    <textarea name="detail_kegiatan" rows="3" required>{{ $detailRundown->detail_kegiatan ?? '' }}</textarea>
+<div class="form-group">
+    <label class="form-label">Detail Kegiatan :</label>
+    <textarea class="form-control" name="detail_kegiatan" required>{{ $detailRundown->detail_kegiatan ?? '' }}</textarea>
 </div>
-
-<button type="submit">Simpan</button>

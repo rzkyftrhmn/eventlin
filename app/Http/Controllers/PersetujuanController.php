@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Persetujuan;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PersetujuanController extends Controller
 {
@@ -79,6 +80,7 @@ class PersetujuanController extends Controller
         $persetujuan->save();
     
        if (auth('admin')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('proposals.index')->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('proposal.panitia.show')->with('success', 'Panitia berhasil dihapus.');

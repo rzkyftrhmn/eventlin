@@ -6,6 +6,7 @@ use App\Models\DetailRundown;
 use App\Models\Divisi;
 use App\Models\Rundown;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DetailRundownController extends Controller
 {
@@ -34,7 +35,7 @@ class DetailRundownController extends Controller
             'jam_akhir' => $request->jam_akhir,
             'detail_kegiatan' => $request->detail_kegiatan,
         ]);
-
+        Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
         return redirect()->route('rundowns.show', $id_rundown)
                          ->with('success', 'Detail rundown berhasil ditambahkan.');
     }
@@ -59,7 +60,7 @@ class DetailRundownController extends Controller
         ]);
 
         $detailRundown->update($request->all());
-
+        Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
         return redirect()->route('rundowns.show', $detailRundown->id_rundown)->with('success', 'Detail rundown berhasil diperbarui.');
     }
 
@@ -69,6 +70,7 @@ class DetailRundownController extends Controller
         $id_rundown = $detail->id_rundown;
         $detail->delete();
 
+        Alert::alert('Sukses', 'Data Berhasil Dihapus!', 'success');
         return redirect()->route('rundowns.show', $id_rundown)->with('success', 'Detail rundown berhasil dihapus.');
     }
 }

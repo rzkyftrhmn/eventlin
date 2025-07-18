@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AuthAdminController extends Controller
 {
@@ -19,6 +20,10 @@ class AuthAdminController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
+        ],[
+            'email.required' => 'Email harus diisi!',
+            'email.email' => 'Format email harus benar!',
+            'password.required' => 'Password harus diisi!',
         ]);
 
         
@@ -27,9 +32,8 @@ class AuthAdminController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->withInput();
+        Alert::toast('Email atau Password anda salah!', 'error');
+        return back();
     }
 
     public function logout(Request $request)
@@ -43,6 +47,7 @@ class AuthAdminController extends Controller
 
     public function showRegisterForm()
     {
+        // Alert::alert('Register berhasil', 'Silakan Login Sekarang!', 'success');
         return view('auth.admin.register');
     }
 
@@ -62,7 +67,8 @@ class AuthAdminController extends Controller
 
         Auth::guard('admin')->login($admin);
 
-        return redirect()->route('admin.dashboard');
+        // Alert::alert('Register berhasil', 'Silakan Login Sekarang!', 'success');
+        return redirect()->route('admin.loginForm');
     }
 
     public function dashboard()

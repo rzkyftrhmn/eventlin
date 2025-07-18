@@ -7,6 +7,7 @@ use App\Models\Proposal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AuthPesertaController extends Controller
 {
@@ -71,6 +72,9 @@ class AuthPesertaController extends Controller
         $credentials = $request->validate([
             'nim' => 'required|string',
             'password' => 'required|string',
+        ],[
+            'nim' => 'NIM harus diisi!',
+            'password' => 'Password harus diisi!',
         ]);
         
         $remember = $request->filled('remember');
@@ -80,9 +84,8 @@ class AuthPesertaController extends Controller
             return redirect()->intended(route('peserta.dashboard'));
         }
 
-        return back()->withErrors([
-            'nim' => 'NIM atau Password salah.',
-        ])->withInput();
+        Alert::toast('NIM atau Password anda salah!', 'error');
+        return back();
     }
 
     public function logout(Request $request)

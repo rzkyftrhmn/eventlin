@@ -1,0 +1,63 @@
+h2{
+    color: #3488C0;
+}
+.title{
+    color: #3488C0;
+    font-size: 15px;
+}
+
+.custom-input {
+    background-color: #f0f0f0; 
+    border: none;
+    border-radius: 50px; 
+    padding: 12px 24px;
+    font-size: 1rem;
+    color: #3488C0; 
+    width: 300px;
+    height: 54px;
+}
+
+.custom-input::placeholder {
+    color: #3488C0; 
+    opacity: 1; 
+    transition: opacity 0.2s ease;
+} 
+
+.custom-input:focus::placeholder {
+    opacity: 0;
+    transition-delay: 0.1s;
+}
+
+.custom-input:focus {
+    background-color: #f0f0f0;
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+
+.button {
+  background-color: #3488C0;
+  height: 54px;
+  border-radius: 50px;
+  border: none;
+  display: flex;
+  align-items: center;   
+  justify-content: center; 
+  width: 300px;
+  height: 54px;
+  color: #fff;
+}
+
+.button:hover{
+    background-image: linear-gradient(to right, rgba(255,0,0,0), #2d72a0);
+}
+
+.content-title p{
+    color: black;
+    font-weight: 400;
+}
+.content-title a{
+    text-decoration: none;
+    color: #3488C0;
+}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Proposal;
 use App\Models\Rundown;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RundownController extends Controller
 {
@@ -30,6 +31,7 @@ class RundownController extends Controller
         Rundown::create($request->all());
     
         if (auth('admin')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
             return redirect()->route('proposals.show', $request->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('proposal.superpanitia.show', $request->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
@@ -67,6 +69,7 @@ class RundownController extends Controller
         ]);
     
         if (auth('admin')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('proposals.show', $rundown->id_proposal)->with('success', 'Rundown berhasil diperbarui.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('proposal.superpanitia.show', $rundown->id_proposal)->with('success', 'Rundown berhasil diperbarui.');
@@ -82,6 +85,7 @@ class RundownController extends Controller
         $rundown->delete();
     
         if (auth('admin')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Dihapus!', 'success');
             return redirect()->route('proposals.show', $rundown->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('proposal.superpanitia.show', $rundown->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');

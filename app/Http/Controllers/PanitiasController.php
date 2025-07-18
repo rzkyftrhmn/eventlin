@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PanitiasController extends Controller
 {
@@ -112,6 +113,7 @@ class PanitiasController extends Controller
         ]);
 
          if (auth('admin')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
             return redirect()->route('panitia.byProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('panitia.SuperbyProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
@@ -177,6 +179,7 @@ class PanitiasController extends Controller
         $panitia->update($data);
 
          if (auth('admin')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('panitia.byProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('panitia.SuperbyProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
@@ -191,11 +194,11 @@ class PanitiasController extends Controller
 
         // Redirect dinamis tergantung siapa yang login
         if (auth('admin')->check()) {
-            return redirect()->route('proposal.byProposal', $proposalId)->with('success', 'Panitia berhasil dihapus.');
+            Alert::alert('Sukses', 'Data Berhasil Dihapus!', 'success');
+            return redirect()->route('panitia.byProposal', $proposalId)->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('panitia.SuperbyProposal', $proposalId)->with('success', 'Panitia berhasil dihapus.');
         }
-
         return redirect()->back()->with('error', 'Tidak memiliki akses.');
     }
     

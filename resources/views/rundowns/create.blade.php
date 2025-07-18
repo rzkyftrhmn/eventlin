@@ -1,32 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Tambah Rundown untuk: {{ $proposal->nama_acara }}</h1>
 
-    @if ($errors->any())
-        <div style="color:red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Tambah Rundown untuk: {{ $proposal->nama_acara }}</h1>
+            </div>
         </div>
-    @endif
+        @if ($errors->any())
+            <div style="color:red;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        <div class="row row-sm">
+            <div class="col-lg-12">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <form action="{{ route('rundowns.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
 
-    <form action="{{ route('rundowns.store') }}" method="POST">
-        @csrf
-        <input type="hidden" name="id_proposal" value="{{ $proposal->id_proposal }}">
+                            <div class="form-group">
+                                <input type="hidden" name="id_proposal" value="{{ $proposal->id_proposal }}">
+                            </div>
 
-        <div>
-            <label>Judul Rundown:</label>
-            <input type="text" name="judul_rundown" required>
+                            <div class="form-group">
+                                <label class="form-label">Judul Rundown :</label>
+                                <input class="form-control" type="text" name="judul_rundown" require>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tanggal Kegiatan :</label>
+                                <input class="form-control" type="date" name="tanggal_kegiatan" require>
+                            </div>
+                            <button type="submit" class="btn btn-green">Simpan</button>
+                            <button type="button" class="btn btn-danger" onclick="window.history.back();">Cancel</button>
+                        </form>
+                    </div>      
+                </div>
+            </div>
         </div>
-
-        <div>
-            <label>Tanggal Kegiatan:</label>
-            <input type="date" name="tanggal_kegiatan" required>
-        </div>
-
-        <button type="submit">Simpan</button>
-    </form>
+    </div>
 @endsection

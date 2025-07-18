@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AuthPanitiaController extends Controller
 {
@@ -18,6 +19,10 @@ class AuthPanitiaController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
+        ],[
+            'email.required' => 'Email harus diisi!',
+            'email.email' => 'Format email harus benar!',
+            'password.required' => 'Password harus diisi!',
         ]);
 
         $remember = $request->filled('remember');
@@ -27,9 +32,8 @@ class AuthPanitiaController extends Controller
             return redirect()->intended(route('panitia.dashboard'));
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->withInput();
+        Alert::toast('Email atau Password anda salah!', 'error');
+        return back();
     }
 
     public function logout(Request $request)
