@@ -206,8 +206,8 @@ Route::middleware('auth:peserta')->group(function () {
     //log out peserta
     Route::post('/logout/peserta', [AuthPesertaController::class, 'logout'])->name('peserta.logout');
     Route::get('/peserta/profile/{nim}', [PesertaController::class, 'show'])->name('peserta.profile');
-    Route::get('/proposal/konfirmasi/{id}', [PembayaranTiketController::class, 'konfirmasi'])
-        ->name('pembayaran.konfirmasi');
+    Route::get('/proposal/upload-form/{id}', [PembayaranTiketController::class, 'uploadForm'])
+        ->name('pembayaran.uploadForm');
     Route::get('/proposal/{id_proposal}/pembayaran', [PembayaranTiketController::class, 'index'])
             ->name('peserta.pembayaran.index');
     Route::post('/proposal/{id_proposal}/pembayaran', [PembayaranTiketController::class, 'store'])

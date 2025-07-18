@@ -10,9 +10,14 @@
         <p><strong class="text-green-600">Terverifikasi</strong></p>
         <a href="{{route('pembayaran.tiket',$peserta->nim)}}">Lihat Tiket</a>
     @elseif($peserta->pembayaran)
-        
- 
+     <p>Status: <strong class="text-yellow-600">{{ $peserta->pembayaran->status_pembayaran }}</strong></p>
+     <a href="{{ route('pembayaran.uploadForm', $peserta->id) }}" class="btn btn-warning">Ubah Bukti Pembayaran</a>
+    @else
+    <a href="{{ route('pembayaran.uploadForm', $peserta->id) }}" class="btn btn-primary">Upload Bukti Pembayaran</a>
     @endif
- @endif
+ @else
+     <p>Proposal ini tidak memerlukan pembayaran.</p>
+  @endif
+
     
 @endsection

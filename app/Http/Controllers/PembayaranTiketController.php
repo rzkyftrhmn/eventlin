@@ -21,7 +21,8 @@ class PembayaranTiketController extends Controller
         return view('pembayaran.index', compact('pembayarans', 'proposal'));
     }
 
-    public function konfirmasi($id){
+
+    public function uploudForm($id){
         $peserta = Peserta::with('proposal','pembayaran')->findOrFail($id);
 
         if (auth()->guard('peserta')->id() !=
@@ -29,7 +30,7 @@ class PembayaranTiketController extends Controller
             abort(403);
         }
         
-        return view('pembayaran.konfirmasi',compact('peserta'));
+        return view('pembayaran.uploud',compact('peserta'));
     }
 
     // Simpan pembayaran baru dari peserta
