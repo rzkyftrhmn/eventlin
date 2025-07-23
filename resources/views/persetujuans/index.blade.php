@@ -1,11 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    @if(auth('panitia')->check())
-        <form action="{{ route('panitia.logout') }}" method="POST" style="margin-bottom: 20px;">
-            @csrf
-            <button type="submit">Logout ({{ auth('panitia')->user()->nama_panitia }})</button>
-        </form>
-    @endif
     <h1>Daftar Proposal Menunggu Persetujuan</h1>
 
     <form action="{{ route('persetujuans.index') }}" method="GET">

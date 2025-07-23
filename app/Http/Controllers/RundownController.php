@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Proposal;
 use App\Models\Rundown;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -25,27 +26,60 @@ class RundownController extends Controller
         $request->validate([
             'id_proposal' => 'required|exists:proposals,id_proposal',
             'judul_rundown' => 'required|string|max:255',
-            'tanggal_kegiatan' => 'required|date',
+            'tanggal_kegiatan' => [
+                'required',
+                'date',
+                'after_or_equal:' . Proposal::find($request->id_proposal)?->tanggal_acara ?? today(),
+            ],
         ]);
-    
+
+        // Cek tanggal sudah dipakai oleh rundown lain pada proposal yang sama
+        $sudahAda = Rundown::where('id_proposal', $request->id_proposal)
+            ->where('tanggal_kegiatan', $request->tanggal_kegiatan)
+            ->exists();
+
+        if ($sudahAda) {
+            return back()->withInput()->withErrors([
+                'tanggal_kegiatan' => 'Tanggal ini sudah digunakan untuk rundown pada proposal ini.',
+            ]);
+        }
+
         Rundown::create($request->all());
-    
+
         if (auth('admin')->check()) {
             Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
             return redirect()->route('proposals.show', $request->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('proposal.superpanitia.show', $request->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
         }
-
-
     }
 
-    public function show(string $id)
+    public function show(Request $request, string $id)
+    {
+        $rundown = Rundown::with('proposal')->findOrFail($id);
+
+        $query = $rundown->detailRundowns()->with('divisi');
+
+        // Search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('judul_rundown', 'like', "%$search%")
+                ->orWhere('detail_kegiatan', 'like', "%$search%");
+            });
+        }
+
+        $detailRundowns = $query->paginate(10)->withQueryString();
+
+        return view('rundowns.show', compact('rundown', 'detailRundowns'));
+    }
+
+    public function exportPdf($id)
     {
         $rundown = Rundown::with(['proposal', 'detailRundowns.divisi'])->findOrFail($id);
-        return view('rundowns.show', compact('rundown'));   
+        $pdf = PDF::loadView('rundowns.pdf', compact('rundown'));
+        return $pdf->download('rundown_' . $rundown->judul_rundown . '.pdf');
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -59,15 +93,32 @@ class RundownController extends Controller
     {
         $request->validate([
             'judul_rundown' => 'required|string|max:255',
-            'tanggal_kegiatan' => 'required|date',
+            'tanggal_kegiatan' => [
+                'required',
+                'date',
+                'after_or_equal:' . Proposal::find($request->id_proposal)?->tanggal_acara ?? today(),
+            ],
         ]);
-    
+
         $rundown = Rundown::findOrFail($id);
+
+        // Cek jika tanggal dipakai oleh rundown lain di proposal yang sama
+        $sudahAda = Rundown::where('id_proposal', $rundown->id_proposal)
+            ->where('tanggal_kegiatan', $request->tanggal_kegiatan)
+            ->where('id_rundown', '!=', $rundown->id_rundown) // hindari dirinya sendiri
+            ->exists();
+
+        if ($sudahAda) {
+            return back()->withInput()->withErrors([
+                'tanggal_kegiatan' => 'Tanggal ini sudah digunakan oleh rundown lain di proposal ini.',
+            ]);
+        }
+
         $rundown->update([
             'judul_rundown' => $request->judul_rundown,
             'tanggal_kegiatan' => $request->tanggal_kegiatan,
         ]);
-    
+
         if (auth('admin')->check()) {
             Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('proposals.show', $rundown->id_proposal)->with('success', 'Rundown berhasil diperbarui.');
@@ -75,6 +126,7 @@ class RundownController extends Controller
             return redirect()->route('proposal.superpanitia.show', $rundown->id_proposal)->with('success', 'Rundown berhasil diperbarui.');
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

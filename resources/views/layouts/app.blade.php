@@ -15,7 +15,7 @@
 		<link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/brand/favicon.ico') }}" />
 
 		<!-- TITLE -->
-		<title>Aplikasi Eventln</title>
+		<title>@yield('title')</title>
 
 		<!-- BOOTSTRAP CSS -->
         <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -74,6 +74,7 @@
 						</a><!-- LOGO -->
 					</div>
 					<ul class="side-menu">
+						@auth('admin')
 						<li><h3>Main</h3></li>
 						<li class="slide">
 							<a class="side-menu__item"  data-bs-toggle="slide" href="{{ route('admin.dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
@@ -83,14 +84,36 @@
 							<a class="side-menu__item" href="{{ route('proposals.index') }}"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Proposal</span></a>
 						</li>
                         <li>
-							<a class="side-menu__item" href="widgets.html"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">Peserta</span></a>
+							<a class="side-menu__item" href="{{ route('peserta.index') }}"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">Peserta</span></a>
 						</li>
                         <li>
-							<a class="side-menu__item" href="widgets.html"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">Panitia</span></a>
+							<a class="side-menu__item" href="{{ route('panitia.index') }}"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">Panitia</span></a>
 						</li>
                         <li>
-							<a class="side-menu__item" href="widgets.html"><i class="side-menu__icon fe fe-layers"></i><span class="side-menu__label">Divisi</span></a>
+							<a class="side-menu__item" href="{{ route('divisis.index') }}"><i class="side-menu__icon fe fe-layers"></i><span class="side-menu__label">Divisi</span></a>
 						</li>
+						<li>
+							<a class="side-menu__item" href="{{ route('admins.index') }}"><i class="side-menu__icon fe fe-layers"></i><span class="side-menu__label">Admin</span></a>
+						</li>
+						@endauth
+					</ul>
+
+					<ul class="side-menu">
+						@auth('panitia')
+						<li><h3>Main</h3></li>
+						<li class="slide">
+							<a class="side-menu__item"  data-bs-toggle="slide" href="{{ route('panitia.dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
+						</li>
+						<li><h3>component</h3></li>
+						<li>
+							<a class="side-menu__item" href="{{ route('proposal.panitia.show') }}"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Proposal</span></a>
+						</li>
+						<li>
+							<a class="side-menu__item" href="{{ route('panitia.profile', auth('panitia')->user()->id_panitia) }}" style="margin-right: 10px;">
+								Profil Saya
+							</a>
+						</li>
+						@endauth
 					</ul>
 				</aside>
 				<!--/APP-SIDEBAR-->
@@ -156,6 +179,7 @@
 								</div>
                                 
 
+								@auth('admin')
                                 <form method="POST" action="{{ route('admin.logout') }}">
                                     @csrf
                                     <button class="button-logout">
@@ -169,15 +193,43 @@
                                         </div>
                                     </button>
                                 </form>
+								@endauth
 
-								<!-- <a class="dropdown-item d-flex border-bottom" href="{{ route('admin.login') }}">
-									<div class="d-flex"><i class="fe fe-power me-3 tx-20 text-muted"></i>
-										<div class="pt-1">
-                                                <h6 class="mb-0">Sign Out</h6>
-											<p class="tx-12 mb-0 text-muted">Account Signout</p>
-										</div>
-									</div>
-								</a> -->
+								@auth('panitia')
+                                <form method="POST" action="{{ route('panitia.logout') }}">
+                                    @csrf
+                                    <button class="button-logout">
+                                        <div class="dropdown-item d-flex border-bottom">
+                                            <div class="d-flex"><i class="fe fe-power me-3 tx-20 text-muted"></i>
+                                                <div class="pt-1">
+                                                    <h6 class="mb-0">Sign Out</h6>
+                                                    <p class="tx-12 mb-0 text-muted">Account Signout</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </form>
+								@endauth
+								
+								<!-- @auth('peserta')
+									{{-- Peserta Links (tampilkan sesuai kebutuhan) --}}
+									<a href="{{ route('peserta.dashboard')}}" style="margin-right: 10px;">Dashboard</a>
+									<a href="{{ route('peserta.profile', auth('peserta')->user()->nim) }}" style="margin-right: 10px;">
+										Profil Saya
+									</a>
+									@php
+									$peserta = Auth::user();
+									@endphp
+									
+									@if ($peserta->proposal->is_berbayar)
+										<a href="{{route('pembayaran.konfirmasi',$peserta->nim)}}">Pembayaran</a>
+									@endif
+									{{-- Logout Peserta --}}
+									<form action="{{ route('peserta.logout') }}" method="POST" style="display: inline;">
+										@csrf
+										<button type="submit" style="color: red; float: right; background: none; border: none; cursor: pointer;">Logout (Peserta)</button>
+									</form>
+								@endauth -->
 
 							</div>
 						</div>

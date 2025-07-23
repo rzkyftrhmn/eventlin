@@ -12,7 +12,14 @@
     <p><strong>Tanggal Acara:</strong> {{ $proposal->tanggal_acara }}</p>
     <p><strong>Waktu Acara:</strong> {{ $proposal->waktu_acara }}</p>
     <p><strong>Detail Acara:</strong> {{ $proposal->detail_acara }}</p>
-    <p><strong>Tanggal Pengajuan:</strong> {{ $proposal->tanggal_pengajuan }}</p>  
+    <p><strong>Tanggal Pengajuan:</strong> {{ $proposal->tanggal_pengajuan }}</p>
+    <p><strong>Jenis Acara:</strong> {{ $proposal->is_berbayar ? 'Berbayar' : 'Gratis' }}</p>
+    @if ($proposal->is_berbayar)
+        <p><strong>Harga Tiket:</strong> {{ $proposal->harga_tiket }}</p>
+        <p><strong>Nama Bank:</strong> {{ $proposal->nama_bank }}</p>
+        <p><strong>Nomor Rekening:</strong> {{ $proposal->nomor_rekening }}</p>
+        <p><strong>Nama Pemilik Rekening:</strong> {{ $proposal->nama_pemilik_rekening }}</p>
+    @endif    
     <hr>
     @if($proposal->status_proposal === 'Disetujui' && $proposal->persetujuans)
         @php
@@ -22,9 +29,19 @@
                                     ->pluck('id_divisi')
                                     ->toArray();
         @endphp
-
-
         <h3>Rundown Acara</h3>
+        @if (session('success'))
+            <div style="color: green; margin-bottom: 10px;">
+                {{ session('success') }}
+            </div>
+        @endif
+        
+        @if (session('error'))
+            <div style="color: red; margin-bottom: 10px;">
+                {{ session('error') }}
+            </div>
+        @endif
+
         @if ($proposal->rundowns->count())
             <table border="1" cellpadding="10" cellspacing="0" style="margin-top: 10px; width: 100%;">
                 <thead>
@@ -42,7 +59,7 @@
                             <td>
                                 <a href="{{ route('rundowns.panitia.show', $rundown->id_rundown) }}">Lihat</a> |
                                 @if(in_array($divisiPanitia, $divisiBolehAbsen))
-                                    <a href="{{ route('absensi.scan', $rundown->id_rundown) }}" class="btn btn-primary">Mulai Absensi</a>
+                                    <a href="{{ route('absensi.rekap', $rundown->id_rundown) }}" class="btn btn-primary">Mulai Absensi</a>
                                 @else
                                     
                                 @endif

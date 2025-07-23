@@ -56,9 +56,14 @@ class ProposalController extends Controller
             'file_proposal' => 'required|mimes:pdf,doc,docx|max:20480',
             'estimasi_peserta' => 'required|integer',
             'kebutuhan_logistik' => 'required',
-            'tanggal_acara' => 'required|date',
+            'tanggal_acara' => 'required|date|after_or_equal:today',
             'waktu_acara' => 'required',
             'detail_acara' => 'required',
+            'is_berbayar' => 'required|boolean',
+            'harga_tiket' => 'required_if:is_berbayar,1|nullable|numeric|min:0',
+            'nama_bank' => 'required_if:is_berbayar,1|nullable|string',
+            'nomor_rekening' => 'required_if:is_berbayar,1|nullable|string',
+            'nama_pemilik_rekening' => 'required_if:is_berbayar,1|nullable|string',
         ]);
 
         $proposal = new Proposal($request->except('file_proposal'));
@@ -92,6 +97,52 @@ class ProposalController extends Controller
         Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
         return redirect()->route('proposals.index')->with('success', 'Proposal berhasil disimpan!');
     }
+    
+    public function update(Request $request, string $id)
+    {
+       $proposal = Proposal::findOrFail($id);
+
+        $request->validate([
+            'nama_acara' => 'required|string|max:255',
+            'jenis_acara' => 'required|string|max:255',
+            'nama_pengusul' => 'required|string|max:255',
+            'judul_proposal' => 'required|string|max:255',
+            'file_proposal' => 'nullable|mimes:pdf,doc,docx|max:20480',
+            'estimasi_peserta' => 'required|integer',
+            'kebutuhan_logistik' => 'required|string',
+            'tanggal_acara' => 'required|date|after_or_equal:today',
+            'waktu_acara' => 'required',
+            'detail_acara' => 'required|string',
+            'is_berbayar' => 'required|boolean',
+            'harga_tiket' => 'required_if:is_berbayar,1|nullable|numeric|min:0',
+            'nama_bank' => 'required_if:is_berbayar,1|nullable|string',
+            'nomor_rekening' => 'required_if:is_berbayar,1|nullable|string',
+            'nama_pemilik_rekening' => 'required_if:is_berbayar,1|nullable|string',
+        ]);
+
+        $proposal->fill($request->except('file_proposal'));
+
+        if ($request->hasFile('file_proposal')) {
+            // Hapus file lama
+            if ($proposal->file_proposal && file_exists(public_path($proposal->file_proposal))) {
+                unlink(public_path($proposal->file_proposal));
+            }
+
+            $file = $request->file('file_proposal');
+            $namaAcara = str_replace(' ', '_', $request->nama_acara);
+            $tanggalPengajuan = date('Ymd', strtotime($request->tanggal_pengajuan));
+            $fileName = $namaAcara . '_' . $tanggalPengajuan . '.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('uploads'), $fileName);
+
+            $proposal->file_proposal = 'uploads/' . $fileName;
+        }
+        $proposal->tanggal_pengajuan = now();
+        $proposal->save();
+
+        Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
+        return redirect()->route('proposals.index')->with('success', 'Proposal berhasil diperbarui.');
+    }
 
     public function show($id)
     {
@@ -112,47 +163,6 @@ class ProposalController extends Controller
         return view('proposals.edit', compact('proposal'));
     }
 
-    public function update(Request $request, string $id)
-    {
-       $proposal = Proposal::findOrFail($id);
-
-        $request->validate([
-            'nama_acara' => 'required|string|max:255',
-            'jenis_acara' => 'required|string|max:255',
-            'nama_pengusul' => 'required|string|max:255',
-            'judul_proposal' => 'required|string|max:255',
-            'file_proposal' => 'nullable|mimes:pdf,doc,docx|max:20480',
-            'estimasi_peserta' => 'required|integer',
-            'kebutuhan_logistik' => 'required|string',
-            'tanggal_acara' => 'required|date',
-            'waktu_acara' => 'required',
-            'detail_acara' => 'required|string',
-        ]);
-
-        $proposal->fill($request->except('file_proposal'));
-
-        if ($request->hasFile('file_proposal')) {
-            // Hapus file lama
-            if ($proposal->file_proposal && file_exists(public_path($proposal->file_proposal))) {
-                unlink(public_path($proposal->file_proposal));
-            }
-
-            $file = $request->file('file_proposal');
-            $namaAcara = str_replace(' ', '_', $request->nama_acara);
-            $tanggalPengajuan = date('Ymd', strtotime($request->tanggal_pengajuan));
-            $fileName = $namaAcara . '_' . $tanggalPengajuan . '.' . $file->getClientOriginalExtension();
-
-            $file->move(public_path('uploads'), $fileName);
-
-            $proposal->file_proposal = 'uploads/' . $fileName;
-        }
-        $proposal->status_proposal = 'Diajukan'; 
-        $proposal->tanggal_pengajuan = now();
-        $proposal->save();
-
-        Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
-        return redirect()->route('proposals.index')->with('success', 'Proposal berhasil diperbarui.');
-    }
 
     public function destroy(Proposal $proposal)
     {

@@ -51,7 +51,14 @@
     <p><strong>Tanggal Acara:</strong> {{ $proposal->tanggal_acara }}</p>
     <p><strong>Waktu Acara:</strong> {{ $proposal->waktu_acara }}</p>
     <p><strong>Detail Acara:</strong> {{ $proposal->detail_acara }}</p>
-    <p><strong>Tangal pengajuan</strong> {{ $proposal->tanggal_pengajuan}}</p>  
+    <p><strong>Tangal pengajuan</strong> {{ $proposal->tanggal_pengajuan}}</p>
+    <p><strong>Jenis Acara:</strong> {{ $proposal->is_berbayar ? 'Berbayar' : 'Gratis' }}</p>
+    @if ($proposal->is_berbayar)
+        <p><strong>Harga Tiket:</strong> {{ $proposal->harga_tiket }}</p>
+        <p><strong>Nama Bank:</strong> {{ $proposal->nama_bank }}</p>
+        <p><strong>Nomor Rekening:</strong> {{ $proposal->nomor_rekening }}</p>
+        <p><strong>Nama Pemilik Rekening:</strong> {{ $proposal->nama_pemilik_rekening }}</p>
+    @endif  
     <hr>
     <h3>Panitia Acara</h3>
         <a href="{{$routeTambahPanitia}}">+ Tambah Panitia</a><br>
@@ -105,6 +112,7 @@
                             <td>
                                 <a href="{{ route('rundowns.show', $rundown->id_rundown) }}">Lihat</a> |
                                 <a href="{{ route('rundowns.edit', $rundown->id_rundown) }}">Edit</a> |
+                                <a href="{{ route('rekap.rundown', $rundown->id_rundown) }}">Rekap</a> |
                                 <form action="{{ route('rundowns.destroy', $rundown->id_rundown) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -129,9 +137,9 @@
             <a href="{{ route('kuota.edit', $proposal->kuotaPendaftaran->id_kuota_pendaftaran) }}">Edit Kuota</a>
         @endif
         <hr>
-     <h3>Peserta Acara</h3>
-        <a href="{{ route('peserta.created', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a><br>
-        <a href="{{ route('peserta.byProposal', ['id_proposal' => $proposal->id_proposal]) }}">Lihat Semua</a>
+        <h3>Peserta Acara</h3>
+            <a href="{{ route('peserta.created', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a><br>
+            <a href="{{ route('peserta.byProposal', ['id_proposal' => $proposal->id_proposal]) }}">Lihat Semua</a>
         @if (session('error'))
             <div style="color: red; font-weight: bold;">
                 {{ session('error') }}
@@ -159,14 +167,18 @@
         @else
             <p>Belum ada peserta yang mendaftar.</p>
         @endif
-
+        @if(auth('panitia')->check() && strtolower(auth('panitia')->user()->jabatan_panitia) === 'bendahara' && $proposal->is_berbayar)
+            <a href="{{ route('pembayaran.verifikasi', $proposal->id_proposal) }}" class="btn btn-primary mt-3">
+                Verifikasi Pembayaran Tiket
+            </a>
+        @endif
     @else
         <p>Status proposal: {{ $proposal->status_proposal }}</p>
         <p>Proposal ini belum disetujui.</p>
     @endif
+
     <hr>
     @if(auth('admin')->check())
-    <hr>
     <h3>Pengaturan Divisi yang Boleh Melakukan Absensi</h3>
     <form action="{{ route('absensiDivisi.store', $proposal->id_proposal) }}" method="POST">
             @csrf
@@ -174,7 +186,7 @@
                 <p>Pilih Divisi yang bisa melakukan absensi panitia:</p>
                 @foreach ($divisis as $divisi)
                     <label style="display: block; margin-bottom: 5px;">
-                        <input type="checkbox" name="divisi_id[]" value="{{ $divisi->id_divisi }}"
+                        <input type="radio" name="divisi_id[]" value="{{ $divisi->id_divisi }}"
                             {{ $proposal->divisiAbsensi->contains($divisi->id_divisi) ? 'checked' : '' }}>
                         {{ $divisi->nama_divisi }}
                     </label>

@@ -13,13 +13,9 @@ use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\RundownController;
 use App\Http\Controllers\PanitiasController;
+use App\Http\Controllers\PembayaranTiketController;
 use App\Http\Controllers\PesertaController;
 use Illuminate\Support\Facades\Route;
-
-// Dashboard (jika ada middleware, sebaiknya pakai auth + role check)
-Route::get('/', function () {
-    return "<h1>dashboard</h1>";
-});
 
 // Auth routes for admin
 // kondisi ketika user belum login
@@ -44,6 +40,12 @@ Route::middleware(['auth:admin'])->group(function () {
 // Divisi hanya untuk admin
     Route::resource('divisis', DivisiController::class);
 
+//panitia
+    Route::resource('panitia', PanitiasController::class);
+
+//peserta
+    Route::resource('peserta', PesertaController::class);
+
 //proposal
     // Proposal management (semua)
     Route::resource('proposals', ProposalController::class);
@@ -55,9 +57,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::put('/persetujuans/{id}/update-status', [PersetujuanController::class, 'updateStatus'])->name('persetujuans.updateStatus');
 
 //Panitia
-    //index all panitia
-    Route::get('/proposals/{id_proposal}/panitia', [PanitiasController::class, 'index'])
-        ->name('panitia.index');
     // index panitia based on proposal    
     Route::get('proposals/{id_proposal}/panitia', [PanitiasController::class, 'indexByProposal'])
         ->name('panitia.byProposal');
@@ -104,13 +103,20 @@ Route::middleware(['auth:panitia'])->group(function () {
     Route::get('/dashboard/panitia', [AuthPanitiaController::class, 'dashboard'])->name('panitia.dashboard');
     //logout
     Route::post('/logout/panitia', [AuthPanitiaController::class, 'logout'])->name('panitia.logout');
+
+    Route::get('/panitia/profile/{id_panitia}', [PanitiasController::class, 'show'])->name('panitia.profile');
+
+
     //tampilan proposal
     Route::get('/proposal-ku', [ProposalController::class, 'showByPanitia'])->name('proposal.panitia.show');
     
     Route::get('/panitia/superproposals/{id}', [ProposalController::class, 'show'])
         ->name('proposal.superpanitia.show');
     
-    // Routes for ketua, sekretaris, bendahara
+    Route::get('/rundowns/panitia/{id}/export-pdf', [RundownController::class, 'exportPdf'])
+        ->name('rundowns.panitia.export.pdf');
+    
+        // Routes for ketua, sekretaris, bendahara
     Route::middleware(['cek.jabatan:ketua,sekretaris,bendahara'])->group(function () {
         //show proposal
 
@@ -146,11 +152,34 @@ Route::middleware(['auth:panitia'])->group(function () {
         
     });
 
+    //routes panitia bendahara
+    Route::middleware(['cek.jabatan:bendahara'])->group(function(){
+         Route::get('/halaman-verifikisi/{id}', [PembayaranTiketController::class, 'index'])->name('pembayaran.verifikasi');
+         Route::put('/verifikasi-pembayaran/{id}', [PembayaranTiketController::class, 'updateStatus'])->name('verifikasi.pembayaran.update');
+
+    });
+
     //routes panitia biasa
     Route::middleware(['cek.jabatan:panitia'])->group(function () {
         //show panitia
         Route::get('/panitia/proposals/{id}/read', [ProposalController::class, 'showPanitia'])
             ->name('proposal.panitia.show.read');
+        //rundown
+        Route::get('/rundowns/panitia/{id}', [RundownController::class, 'show'])
+            ->name('rundowns.panitia.show');
+        // Halaman scan QR untuk absensi berdasarkan rundown
+        Route::get('/absensi/scan/{id_rundown}', [AbsensiPanitiaController::class, 'scanForm'])
+            ->name('absensi.scan');
+        // Menyimpan data absensi setelah scan QR
+        Route::post('/absensi/store', [AbsensiPanitiaController::class, 'store'])
+            ->name('absensi.store');
+        // Halaman rekap absensi berdasarkan rundown
+        Route::get('/absensi/rundown/{id_rundown}', [AbsensiPanitiaController::class, 'rekap'])
+            ->name('absensi.rekap');
+        // Halaman input manual absensi
+        Route::post('/absensi/manual', [AbsensiPanitiaController::class, 'manual'])
+            ->name('absensi.manual'); // untuk input manual
+        
     });
 
     //routes panitia akademik
@@ -169,8 +198,8 @@ Route::middleware(['auth:panitia'])->group(function () {
 // Pendaftaran peserta (hanya jika kuota masih ada dan status = Buka)
 // kondisi ketika user belum login
 Route::middleware('guest:peserta')->group(function () {
+    Route::get('/', [AuthPesertaController::class, 'pilihProposal'])->name('peserta.pilihProposal');
     //memilih proposal
-    Route::get('/daftar', [AuthPesertaController::class, 'pilihProposal'])->name('peserta.pilihProposal');
     Route::get('/daftar/{id_proposal}', [AuthPesertaController::class, 'showRegisterForm'])->name('peserta.formRegister');
     Route::post('/daftar/{id_proposal}', [AuthPesertaController::class, 'register'])->name('peserta.register');
 
@@ -183,7 +212,25 @@ Route::middleware('auth:peserta')->group(function () {
     //dashboard peserta
     Route::get('/dashboard/peserta', [AuthPesertaController::class, 'dashboard'])->name('peserta.dashboard');
     //log out peserta
-    Route::post('/logout/peserta', [AuthPesertaController::class, 'logout'])->name('peserta.logout');
+    Route::post('/logout/peserta', [AuthPesertaController::class, 'logout'])
+        ->name('peserta.logout');
+    Route::get('/peserta/profile/{nim}', [PesertaController::class, 'show'])
+        ->name('peserta.profile');
+    Route::get('/pembayaran/konfirmasi/{nim}', [PembayaranTiketController::class, 'konfirmasi'])
+        ->name('pembayaran.konfirmasi');
+    Route::get('/pembayaran/form_bayar/{id}', [PembayaranTiketController::class, 'uploudForm'])
+        ->name('pembayaran.bayar');
+    Route::post('pembayaran/upload-form/{id_proposal}',action:[PembayaranTiketController::class,'store'])
+        ->name('pembayaran.uploadForm.store');
+
+    Route::get('/pembayaran/tiket/{id}', [PembayaranTiketController::class, 'tiket'])
+        ->name('pembayaran.tiket');
+    Route::get('/proposal/{id_proposal}/pembayaran', [PembayaranTiketController::class, 'index'])
+            ->name('peserta.pembayaran.index');
+    Route::post('/proposal/{id_proposal}/pembayaran', [PembayaranTiketController::class, 'store'])
+        ->name('peserta.pembayaran.store');
+    Route::get('/pembayaran/tiket/{id}/download', [PembayaranTiketController::class, 'downloadTiket'])
+        ->name('pembayaran.download');
 });
 
 
@@ -201,26 +248,34 @@ Route::middleware(['auth.super'])->group(function () {
     Route::get('/detail-rundowns/{id}/edit', [DetailRundownController::class, 'edit'])->name('detail-rundowns.edit');
     Route::put('/detail-rundowns/{id}', [DetailRundownController::class, 'update'])->name('detail-rundowns.update');
     Route::delete('/detail-rundowns/{id}', [DetailRundownController::class, 'destroy'])->name('detail-rundowns.destroy');
+    Route::get('/rundowns/{id}/export-pdf', [RundownController::class, 'exportPdf'])->name('rundowns.export.pdf');
+    
+    
 //kuota
     Route::resource('kuota', KuotaPendaftaranController::class);
 //peserta
     // Route::resource('peserta', PesertaController::class);
-    Route::get('/proposals/{id_proposal}/peserta/created', [PesertaController::class, 'created'])->name('peserta.created');
+    Route::get('/proposals/{id_proposal}/peserta/created', [PesertaController::class, 'create'])->name('peserta.created');
     Route::post('/proposals/{id_proposal}/peserta', [PesertaController::class, 'store'])->name('peserta.store');
-    Route::get('proposals/{id_proposal}/peserta', [PesertaController::class, 'indexByProposal'])->name('peserta.byProposal');
+    Route::get('proposals/{id_proposal}/pesertas', [PesertaController::class, 'indexByProposal'])->name('peserta.byProposal');
     Route::get('/peserta/{nim}/edit', [PesertaController::class, 'edit'])->name('peserta.edit');
     Route::put('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.update');
     Route::delete('/peserta/{nim}', [PesertaController::class, 'update'])->name('peserta.destroy');
-//rundown
-    Route::get('/rundowns/panitia/{id}', [RundownController::class, 'show'])->name('rundowns.panitia.show');
+    // Rekap absensi panitia
+    // Untuk halaman tampilan rekap
+    Route::get('/rekap/rundown/{id_rundown}', [AbsensiPanitiaController::class, 'index'])
+        ->name('rekap.rundown');
+    // Untuk export PDF
+    Route::get('/rekap/rundown/{id_rundown}/pdf', [AbsensiPanitiaController::class, 'exportPdf'])
+        ->name('absensi.rekap.pdf');
+    Route::get('/admin/proposal/{id_proposal}/pembayaran', [\App\Http\Controllers\PembayaranTiketController::class, 'index'])
+        ->name('admin.pembayaran.index');
+    Route::patch('/admin/pembayaran/{id}/status', [\App\Http\Controllers\PembayaranTiketController::class, 'updateStatus'])
+        ->name('admin.pembayaran.updateStatus');
 }); 
 
 
-// Halaman scan QR untuk absensi berdasarkan rundown
-Route::get('/absensi/scan/{id_rundown}', [AbsensiPanitiaController::class, 'scanForm'])->name('absensi.scan');
 
-// Menyimpan data absensi setelah scan QR
-Route::post('/absensi/store', [AbsensiPanitiaController::class, 'store'])->name('absensi.store');
 
 
 

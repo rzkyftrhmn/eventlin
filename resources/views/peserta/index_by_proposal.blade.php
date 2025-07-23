@@ -8,8 +8,6 @@
         <button type="submit">Cari</button>
     </form>
     
-   
-
     <a href="{{ route('peserta.created', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a>
     @if ($pesertas->count())
         <table border="1" cellpadding="10" cellspacing="0" style="margin-top: 10px; width: 100%;">

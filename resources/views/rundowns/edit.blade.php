@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- <h2>Edit Rundown</h2>
-
     <form action="{{ route('rundowns.update', $rundown->id_rundown) }}" method="POST">
         @csrf
         @method('PUT')
@@ -14,7 +12,9 @@
 
         <div>
             <label>Tanggal Kegiatan:</label>
-            <input type="date" name="tanggal_kegiatan" value="{{ old('tanggal_kegiatan', $rundown->tanggal_kegiatan) }}" required>
+            <input type="date" name="tanggal_kegiatan" <input type="date" name="tanggal_kegiatan"
+                    value="{{ old('tanggal_kegiatan', $rundown->tanggal_kegiatan ?? '') }}"
+                    min="{{ $proposal->tanggal_acara ?? date('Y-m-d') }}" required>
         </div>
 
         <button type="submit">Simpan</button>

@@ -13,6 +13,9 @@
 
     <p id="loading-status" style="font-weight: bold; color: blue;">Mempersiapkan kamera...</p>
     <div id="reader" style="width: 300px; margin-bottom: 15px;"></div>
+
+
+    {{-- Hasil Scan --}}
     <p id="scan-result"></p>
 
     <form method="POST" action="{{ route('absensi.store') }}">
@@ -36,6 +39,10 @@
     </form>
 
     {{-- Scanner --}}
+    <style>
+
+    </style>    
+   
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
         const scanner = new Html5Qrcode("reader");

@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id('id_pembayaran');
             $table->string('nim');
             $table->foreign('nim')->references('nim')->on('pesertas')->onDelete('cascade');
-            $table->string('metode_pembayaran');
-            $table->enum('status_pembayaran', ['Diterima', 'Ditolak']);
-            $table->string('bukti_pembayaran');
+            $table->unsignedBigInteger('id_proposal');
+            $table->foreign('id_proposal')->references('id_proposal')->on('proposals')->onDelete('cascade');
+            $table->string('bukti_pembayaran'); // Upload bukti transfer
+            $table->enum('status_pembayaran', ['Diterima', 'Ditolak', 'Menunggu'])->default('Menunggu');
             $table->timestamps();
         });
     }

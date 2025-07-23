@@ -35,13 +35,13 @@
         @enderror
     </div>
 
-    <div>
-        <label for="tanggal_pendaftaran">Tanggal Pendaftaran</label>
-        <input type="date" name="tanggal_pendaftaran" id="tanggal_pendaftaran" value="{{ old('tanggal_pendaftaran', $peserta->tanggal_pendaftaran ?? now()->format('Y-m-d')) }}" required>
-        @error('tanggal_pendaftaran')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
+    {{-- Hapus input tanggal, ganti dengan hanya tampilkan jika edit --}}
+    @if(isset($peserta))
+        <div>
+            <label for="tanggal_pendaftaran">Tanggal Pendaftaran</label>
+            <input type="text" value="{{ $peserta->tanggal_pendaftaran }}" readonly>
+        </div>
+    @endif
 
     <div>
         <label for="password">Password</label>

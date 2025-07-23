@@ -14,7 +14,12 @@
                 </a>
             </div>
         </div>
-    
+    @endif
+    @if (session('error'))
+        <div style="color: red; margin-bottom: 10px;">
+            {{ session('error') }}
+        </div>
+    @endif
         <div class="row row-sm">
             <div class="col-lg-12">
                 <div class="card custom-card">

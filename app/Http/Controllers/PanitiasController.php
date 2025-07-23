@@ -20,7 +20,7 @@ class PanitiasController extends Controller
         $search = $request->input('search');
         $filterProposal = $request->input('proposal');
 
-        $query = \App\Models\Panitia::with(['proposal', 'divisi']);
+        $query = Panitia::with(['proposal', 'divisi']);
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -37,6 +37,18 @@ class PanitiasController extends Controller
         $proposals = \App\Models\Proposal::all();
 
         return view('panitia.index', compact('panitias', 'search', 'filterProposal', 'proposals'));
+    }
+
+    public function show($id_panitia)
+    {
+        $panitia = Panitia::with(['proposal', 'divisi'])->findOrFail($id_panitia);
+
+        // Jika login panitia, hanya boleh akses profil sendiri
+        if (auth('panitia')->check() && auth('panitia')->id() != $panitia->id_panitia) {
+            abort(403); // akses ditolak
+        }
+
+        return view('panitia.show', compact('panitia'));
     }
 
 

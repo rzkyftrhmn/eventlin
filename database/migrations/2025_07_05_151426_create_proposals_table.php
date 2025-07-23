@@ -25,6 +25,13 @@ return new class extends Migration
             $table->date('tanggal_acara');
             $table->time('waktu_acara');
             $table->text('detail_acara');
+            $table->boolean('is_berbayar')->default(false);
+            $table->integer('harga_tiket')->nullable();
+
+            // Data rekening untuk pembayaran
+            $table->string('nama_bank')->nullable();
+            $table->string('nomor_rekening')->nullable();
+            $table->string('nama_pemilik_rekening')->nullable();
             $table->timestamps();
         });
     }
