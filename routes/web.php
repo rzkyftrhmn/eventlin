@@ -211,6 +211,19 @@ Route::middleware('guest:peserta')->group(function () {
 Route::middleware('auth:peserta')->group(function () {
     //dashboard peserta
     Route::get('/dashboard/peserta', [AuthPesertaController::class, 'dashboard'])->name('peserta.dashboard');
+    Route::get('/events', [ProposalController::class, 'allEvents'])->name('peserta.all_event');
+    Route::get('/dashboard/contentPeserta', function () {
+        return view('peserta.content_dashboard');
+    })->name('peserta.content_dashboard');
+
+    Route::get('/event/detail', function () {
+        return view('peserta.detail_event');
+    })->name('peserta.detail_event');
+
+    Route::get('/booking', function () {
+        return view('peserta.booking');
+    })->name('peserta.booking');
+
     //log out peserta
     Route::post('/logout/peserta', [AuthPesertaController::class, 'logout'])
         ->name('peserta.logout');

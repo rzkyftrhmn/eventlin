@@ -187,4 +187,9 @@ class ProposalController extends Controller
         return view('proposals.index', compact('proposals'));
     }
 
+    public function allEvents()
+    {
+        return view('peserta.all_event');
+    }
+
 }

@@ -128,6 +128,7 @@ class PanitiasController extends Controller
             Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
             return redirect()->route('panitia.byProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
             return redirect()->route('panitia.SuperbyProposal', $id_proposal)->with('success', 'Panitia berhasil dihapus.');
         }
     }
@@ -194,6 +195,7 @@ class PanitiasController extends Controller
             Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('panitia.byProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
             return redirect()->route('panitia.SuperbyProposal', $panitia->id_proposal)->with('success', 'Panitia berhasil dihapus.');
         }
    }

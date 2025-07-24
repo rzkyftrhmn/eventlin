@@ -70,51 +70,49 @@
 				<aside class="app-sidebar">
 					<div class="side-header">
 						<a class="header-brand1" href="index.html">
-							<img src="{{ asset('assets/images/brand/logo-3.png') }}" class="header-brand-img light-logo1" alt="logo">
+							<img src="{{ asset('assets/images/logo-evenln.png') }}" class="header-brand-img light-logo1" alt="logo">
 						</a><!-- LOGO -->
 					</div>
-					<ul class="side-menu">
-						@auth('admin')
-						<li><h3>Main</h3></li>
-						<li class="slide">
-							<a class="side-menu__item"  data-bs-toggle="slide" href="{{ route('admin.dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
-						</li>
-						<li><h3>component</h3></li>
-						<li>
-							<a class="side-menu__item" href="{{ route('proposals.index') }}"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Proposal</span></a>
-						</li>
-                        <li>
-							<a class="side-menu__item" href="{{ route('peserta.index') }}"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">Peserta</span></a>
-						</li>
-                        <li>
-							<a class="side-menu__item" href="{{ route('panitia.index') }}"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">Panitia</span></a>
-						</li>
-                        <li>
-							<a class="side-menu__item" href="{{ route('divisis.index') }}"><i class="side-menu__icon fe fe-layers"></i><span class="side-menu__label">Divisi</span></a>
-						</li>
-						<li>
-							<a class="side-menu__item" href="{{ route('admins.index') }}"><i class="side-menu__icon fe fe-layers"></i><span class="side-menu__label">Admin</span></a>
-						</li>
-						@endauth
-					</ul>
+					@auth('admin')
+						<ul class="side-menu">
+							<li><h3>Main</h3></li>
+							<li class="slide">
+								<a class="side-menu__item"  data-bs-toggle="slide" href="{{ route('admin.dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
+							</li>
+							<li><h3>component</h3></li>
+							<li>
+								<a class="side-menu__item" href="{{ route('divisis.index') }}"><i class="side-menu__icon fe fe-layers"></i><span class="side-menu__label">Divisi</span></a>
+							</li>
+							<li>
+								<a class="side-menu__item" href="{{ route('proposals.index') }}"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Proposal</span></a>
+							</li>
+							<li>
+								<a class="side-menu__item" href="{{ route('peserta.index') }}"><i class="side-menu__icon fe fe-users"></i><span class="side-menu__label">Peserta</span></a>
+							</li>
+							<li>
+								<a class="side-menu__item" href="{{ route('panitia.index') }}"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">Panitia</span></a>
+							</li>
+							<li>
+								<a class="side-menu__item" href="{{ route('admins.index') }}"><i class="side-menu__icon fe fe-user-check"></i><span class="side-menu__label">Admin</span></a>
+							</li>
+						</ul>
+					@endauth
 
-					<ul class="side-menu">
-						@auth('panitia')
-						<li><h3>Main</h3></li>
-						<li class="slide">
-							<a class="side-menu__item"  data-bs-toggle="slide" href="{{ route('panitia.dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
-						</li>
-						<li><h3>component</h3></li>
-						<li>
-							<a class="side-menu__item" href="{{ route('proposal.panitia.show') }}"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Proposal</span></a>
-						</li>
-						<li>
-							<a class="side-menu__item" href="{{ route('panitia.profile', auth('panitia')->user()->id_panitia) }}" style="margin-right: 10px;">
-								Profil Saya
-							</a>
-						</li>
-						@endauth
-					</ul>
+					@auth('panitia')
+						<ul class="side-menu">
+							<li><h3>Main</h3></li>
+							<li class="slide">
+								<a class="side-menu__item"  data-bs-toggle="slide" href="{{ route('panitia.dashboard') }}"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
+							</li>
+							<li><h3>component</h3></li>
+							<li>
+								<a class="side-menu__item" href="{{ route('proposal.panitia.show') }}"><i class="side-menu__icon fe fe-file"></i><span class="side-menu__label">Proposal</span></a>
+							</li>
+							<li>
+								<a class="side-menu__item" href="{{ route('panitia.profile', auth('panitia')->user()->id_panitia) }}"><i class="side-menu__icon fa fa-address-card-o"></i><span class="side-menu__label">Profile</span></a>
+							</li>
+						</ul>
+					@endauth
 				</aside>
 				<!--/APP-SIDEBAR-->
 
@@ -167,15 +165,30 @@
 						<div class="tab-content">
 							<div class="tab-pane active" id="side1">
 								<div class="card-body text-center">
+
+								@auth('admin')
 									<div class="dropdown user-pro-body">
 										<div class="">
-											<img alt="user-img" class="avatar avatar-xl brround mx-auto text-center" src="../../assets/images/faces/6.jpg"><span class="avatar-status profile-status bg-green"></span>
+											<img alt="user-img" class="avatar avatar-xl brround mx-auto text-center" src="{{ asset('assets/images/admin.jpg') }}"><span class="avatar-status profile-status bg-green"></span>
 										</div>
 										<div class="user-info mg-t-20">
-											<h6 class="fw-semibold  mt-2 mb-0">Nama</h6>
-											<span class="mb-0 text-muted fs-12">Premium Member</span>
+											<h6 class="fw-semibold  mt-2 mb-0">{{ auth('admin')->user()->nama_admin }}</h6>
+											<span class="mb-0 text-muted fs-12">{{ auth('admin')->user()->email }}</span>
 										</div>
 									</div>
+								@endauth
+								
+								@auth('panitia')
+									<div class="dropdown user-pro-body">
+										<div class="">
+											<img alt="user-img" class="avatar avatar-xl brround mx-auto text-center" src="{{ asset('assets/images/admin.jpg') }}"><span class="avatar-status profile-status bg-green"></span>
+										</div>
+										<div class="user-info mg-t-20">
+											<h6 class="fw-semibold  mt-2 mb-0">{{ auth('panitia')->user()->nama_panitia }}</h6>
+											<span class="mb-0 text-muted fs-12">{{ auth('panitia')->user()->email }}</span>
+										</div>
+									</div>
+								@endauth
 								</div>
                                 
 
@@ -210,27 +223,6 @@
                                     </button>
                                 </form>
 								@endauth
-								
-								<!-- @auth('peserta')
-									{{-- Peserta Links (tampilkan sesuai kebutuhan) --}}
-									<a href="{{ route('peserta.dashboard')}}" style="margin-right: 10px;">Dashboard</a>
-									<a href="{{ route('peserta.profile', auth('peserta')->user()->nim) }}" style="margin-right: 10px;">
-										Profil Saya
-									</a>
-									@php
-									$peserta = Auth::user();
-									@endphp
-									
-									@if ($peserta->proposal->is_berbayar)
-										<a href="{{route('pembayaran.konfirmasi',$peserta->nim)}}">Pembayaran</a>
-									@endif
-									{{-- Logout Peserta --}}
-									<form action="{{ route('peserta.logout') }}" method="POST" style="display: inline;">
-										@csrf
-										<button type="submit" style="color: red; float: right; background: none; border: none; cursor: pointer;">Logout (Peserta)</button>
-									</form>
-								@endauth -->
-
 							</div>
 						</div>
 					</div>

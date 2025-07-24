@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Daftar Sebagai Peserta</h1>
-    @include('peserta.form')
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Tambah Peserta</h1>
+        </div>
+    </div>
+    <div class="row row-sm">
+        <div class="col-lg-12">
+            <div class="card custom-card">
+                <div class="card-body">
+                    @include('peserta.form')
+                </div>      
+            </div>
+        </div>
+    </div>
 @endsection

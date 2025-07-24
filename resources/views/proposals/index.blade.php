@@ -14,7 +14,6 @@
                 </a>
             </div>
         </div>
-    @endif
     @if (session('error'))
         <div style="color: red; margin-bottom: 10px;">
             {{ session('error') }}
@@ -52,7 +51,7 @@
                                 <tbody>
                                     @forelse ($proposals as $proposal)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ ($proposals->currentPage() - 1) * $proposals->perPage() + $loop->iteration }}</td>
                                             <td>{{ $proposal->nama_acara }}</td>
                                             <td>{{ $proposal->judul_proposal }}</td>
                                             <td>{{ $proposal->status_proposal }}</td>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+
     <div class="page-header">
         <div>
             <h1 class="page-title">Tambah Proposal</h1>
@@ -13,15 +13,16 @@
                 <div class="card-body">
                     <form action="{{ route('proposals.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                    
+
                         @include('proposals.form', ['proposal' => null])
-                    
-                        <button type="submit" class="btn btn-green">Simpan</button>
-                        <button type="button" class="btn btn-danger" onclick="window.history.back();">Cancel</button>
+
+                        <button type="submit" class="btn btn-green">Submit</button>
+                        <button type="cancel" class="btn btn-danger" onclick="window.history.back();">Cancel</button>
                     </form>
                 </div>      
             </div>
         </div>
     </div>
-</div>
+
+    
 @endsection

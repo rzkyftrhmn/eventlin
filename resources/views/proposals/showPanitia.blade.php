@@ -1,26 +1,88 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Detail Proposal</h1>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Detail Proposal</h1>
+        </div>
+    </div>
 
-    <p><strong>Nama Acara:</strong> {{ $proposal->nama_acara }}</p>
-    <p><strong>Jenis Acara:</strong> {{ $proposal->jenis_acara }}</p>
-    <p><strong>Nama Pengusul:</strong> {{ $proposal->nama_pengusul }}</p>
-    <p><strong>Judul Proposal:</strong> {{ $proposal->judul_proposal }}</p>
-    <p><strong>Estimasi Peserta:</strong> {{ $proposal->estimasi_peserta }}</p>
-    <p><strong>Kebutuhan Logistik:</strong> {{ $proposal->kebutuhan_logistik }}</p>
-    <p><strong>Tanggal Acara:</strong> {{ $proposal->tanggal_acara }}</p>
-    <p><strong>Waktu Acara:</strong> {{ $proposal->waktu_acara }}</p>
-    <p><strong>Detail Acara:</strong> {{ $proposal->detail_acara }}</p>
-    <p><strong>Tanggal Pengajuan:</strong> {{ $proposal->tanggal_pengajuan }}</p>
-    <p><strong>Jenis Acara:</strong> {{ $proposal->is_berbayar ? 'Berbayar' : 'Gratis' }}</p>
-    @if ($proposal->is_berbayar)
-        <p><strong>Harga Tiket:</strong> {{ $proposal->harga_tiket }}</p>
-        <p><strong>Nama Bank:</strong> {{ $proposal->nama_bank }}</p>
-        <p><strong>Nomor Rekening:</strong> {{ $proposal->nomor_rekening }}</p>
-        <p><strong>Nama Pemilik Rekening:</strong> {{ $proposal->nama_pemilik_rekening }}</p>
-    @endif    
-    <hr>
+    <div class="row row-sm">
+        <div class="col-lg-12">
+            <div class="card costum-card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table border text-nowrap text-md-nowrap table-bordered mg-b-0">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 20%;">Nama Acara :</td>
+                                    <td>{{ $proposal->nama_acara }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Jenis Acara :</td>
+                                    <td>{{ $proposal->jenis_acara }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nama Pengusul :</td>
+                                    <td>{{ $proposal->nama_pengusul }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Judul Proposal :</td>
+                                    <td>{{ $proposal->judul_proposal }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Estimasi Peserta :</td>
+                                    <td>{{ $proposal->estimasi_peserta }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kebutuhan Logistik :</td>
+                                    <td>{{ $proposal->kebutuhan_logistik }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tanggal Acara :</td>
+                                    <td>{{ $proposal->tanggal_acara }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Waktu Acara :</td>
+                                    <td>{{ $proposal->waktu_acara }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Detail Acara :</td>
+                                    <td>{{ $proposal->detail_acara }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tanggal Pengajuan :</td>
+                                    <td>{{ $proposal->tanggal_pengajuan }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Jenis Acara :</td>
+                                    <td>{{ $proposal->is_berbayar ? 'Berbayar' : 'Gratis' }}</td>
+                                </tr>
+                                @if ($proposal->is_berbayar)
+                                    <tr>
+                                        <td>Harga Tiket :</td>
+                                        <td>{{ $proposal->harga_tiket }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nama Bank :</td>
+                                        <td>{{ $proposal->nama_bank }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nomor Rekening :</td>
+                                        <td>{{ $proposal->nomor_rekening }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nama Pemilik Rekening :</td>
+                                        <td>{{ $proposal->nama_pemilik_rekening }}</td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @if($proposal->status_proposal === 'Disetujui' && $proposal->persetujuans)
         @php
             $user = auth('panitia')->user();
@@ -29,7 +91,13 @@
                                     ->pluck('id_divisi')
                                     ->toArray();
         @endphp
-        <h3>Rundown Acara</h3>
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Rundown Acara</h1>
+            </div>
+        </div>
+
         @if (session('success'))
             <div style="color: green; margin-bottom: 10px;">
                 {{ session('success') }}
@@ -42,43 +110,53 @@
             </div>
         @endif
 
-        @if ($proposal->rundowns->count())
-            <table border="1" cellpadding="10" cellspacing="0" style="margin-top: 10px; width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Judul Rundown</th>
-                        <th>Tanggal Kegiatan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($proposal->rundowns as $rundown)
-                        <tr>
-                            <td>{{ $rundown->judul_rundown }}</td>
-                            <td>{{ $rundown->tanggal_kegiatan }}</td>
-                            <td>
-                                <a href="{{ route('rundowns.panitia.show', $rundown->id_rundown) }}">Lihat</a> |
-                                @if(in_array($divisiPanitia, $divisiBolehAbsen))
-                                    <a href="{{ route('absensi.rekap', $rundown->id_rundown) }}" class="btn btn-primary">Mulai Absensi</a>
-                                @else
-                                    
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @else
-            <p>Belum ada rundown untuk acara ini.</p>
-        @endif
-        <hr>
+        <div class="row row-sm">
+            <div class="col-lg-12">
+                <div class="card costum-card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            @if ($proposal->rundowns->count())
+                                <table class="table border text-nowrap text-md-nowrap table-bordered mg-b-0">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Judul Rundown</th>
+                                            <th>Tanggal Kegiatan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($proposal->rundowns as $rundown)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $rundown->judul_rundown }}</td>
+                                                <td>{{ $rundown->tanggal_kegiatan }}</td>
+                                                <td>
+                                                    <a href="{{ route('rundowns.panitia.show', $rundown->id_rundown) }}" class="btn btn-info btn-sm rounded-11 me-2" data-bs-toggle="tooltip" data-bs-original-title="Lihat" style="height: 30px;"><i class="fe fe-eye" style="font-size: 16px;"></i></a>
+                                                    @if(in_array($divisiPanitia, $divisiBolehAbsen))
+                                                    <a href="{{ route('absensi.rekap', $rundown->id_rundown) }}" class="btn btn-primary">Mulai Absensi</a>
+                                                    @else
+                                                        
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <p>Belum ada rundown untuk acara ini.</p>
+                            @endif
+                        </div>        
+                    </div>        
+                </div>        
+            </div>        
+        </div>        
+        
         @if (session('error'))
             <div style="color: red; font-weight: bold;">    
                 {{ session('error') }}
             </div>
-            @endif
-        @endif {{-- penutup utama untuk if status_proposal --}}
-    
-    <hr>
-    <a href="{{ route('proposal.panitia.show', $proposal->id_proposal) }}">Kembali</a>
+        @endif
+    @endif
+    <a href="{{ route('proposal.panitia.show', $proposal->id_proposal) }}" class="btn btn-primary mb-4">Kembali</a>
 @endsection

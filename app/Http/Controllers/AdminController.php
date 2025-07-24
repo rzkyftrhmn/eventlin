@@ -44,7 +44,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-    
+        Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
         return redirect()->route('admins.index')->with('success', 'Admin berhasil ditambahkan.');
     }
 
@@ -87,7 +87,7 @@ class AdminController extends Controller
         }
     
         $admin->save();
-    
+        Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
         return redirect()->route('admins.index')->with('success', 'Admin berhasil diperbarui.');
     }
 
@@ -95,7 +95,7 @@ class AdminController extends Controller
     {
         $admin = Admin::findOrFail($id);
         $admin->delete();
-
+        Alert::alert('Sukses', 'Data Berhasil Dihapus!', 'success');
         return redirect()->route('admins.index')->with('success', 'Admin berhasil dihapus.');
     }
 }

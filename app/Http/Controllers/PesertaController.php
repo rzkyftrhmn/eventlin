@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule as ValidationRule;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PesertaController extends Controller
 {
@@ -21,15 +22,15 @@ class PesertaController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('nama_peserta', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%")->paginate(5);
             });
         }
 
         if ($filterProposal) {
-            $query->where('id_proposal', $filterProposal);
+            $query->where('id_proposal', $filterProposal)->paginate(5);
         }
 
-        $pesertas = $query->orderBy('created_at', 'desc')->paginate(10); // 👈 Pagination
+        $pesertas = $query->orderBy('created_at', 'desc')->paginate(5); 
         $proposals = \App\Models\Proposal::all();
 
         return view('peserta.index', compact('pesertas', 'search', 'filterProposal', 'proposals'));
@@ -102,8 +103,10 @@ class PesertaController extends Controller
         $kuota->increment('kuota_terpakai');
 
         if (auth('admin')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
             return redirect()->route('proposals.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
         } elseif (auth('panitia')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Ditambahkan!', 'success');
             return redirect()->route('proposal.superpanitia.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
         }
     }
@@ -155,6 +158,7 @@ class PesertaController extends Controller
 
         $peserta->update($data);
 
+        Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
         return redirect()->route('peserta.byProposal', $peserta->id_proposal)->with('success', 'Peserta berhasil diperbarui.');
     }
 

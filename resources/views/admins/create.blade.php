@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Tambah Admin</h1>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Tambah Admin</h1>
+        </div>
+    </div>
 
     @if ($errors->any())
         <div style="color:red;">
@@ -13,35 +17,51 @@
         </div>
     @endif
 
-    <form action="{{ route('admins.store') }}" method="POST">
-        @csrf
+    <div class="row row-sm">
+        <div class="col-lg-12">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <form action="{{ route('admins.store') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label class="form-label">Nama Admin :</label>
+                            <input class="form-control" type="text" name="nama_admin" value="{{ old('nama_admin') }}" required>
+                            @error('nama_admin')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-        <div>
-            <label for="nama_admin">Nama Admin</label>
-            <input type="text" name="nama_admin" value="{{ old('nama_admin') }}" required>
+                        <div class="form-group">
+                            <label class="form-label">Email :</label>
+                            <input class="form-control" type="email" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password :</label>
+                            <input class="form-control" type="password" name="password" value="{{ old('email') }}" required>
+                            <small id="passwordHelp" style="display:block;color:gray;">
+                                Minimal 8 karakter, termasuk huruf besar, huruf kecil, angka, dan simbol
+                            </small>
+                            @error('password')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Konfirmasi Password :</label>
+                            <input class="form-control" type="password" name="password_confirmation" id="password_confirmation" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-green">Simpan</button>
+                        <a href="{{ route('admins.index') }}" class="btn btn-danger"> Cancel</a>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div>
-            <label for="email">Email</label>
-            <input type="email" name="email" value="{{ old('email') }}" required>
-        </div>
-
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
-            <small id="passwordHelp" style="display:block;color:gray;">
-                Minimal 8 karakter, termasuk huruf besar, huruf kecil, angka, dan simbol
-            </small>
-        </div>
-
-        <div>
-            <label for="password_confirmation">Konfirmasi Password</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" required>
-            <small id="matchMessage" style="display:block;"></small>
-        </div>
-
-        <button type="submit">Simpan</button>
-    </form>
+    </div>
 
     <script>
         // Password match checker

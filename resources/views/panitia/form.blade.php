@@ -34,7 +34,7 @@
 <div class="form-group">
     <label class="form-label">Jabatan :</label>
     @can('edit-jabatan-panitia')
-    <select name="jabatan_panitia" class="form-control form-select select2" id="jabatan" required>
+    <select name="jabatan_panitia" class="form-control form-select select2" id="jabatan" style="width: 40%;" required>
         <option value="" disabled selected>Pilih Jabatan</option>
         @foreach(['Ketua', 'Sekretaris', 'Bendahara', 'Panitia', 'Akademik'] as $jabatan)
             <option value="{{ $jabatan }}"
@@ -61,7 +61,7 @@
 <div class="divisi-container" id="divisi-container" style="{{ strtolower($jabatanSekarang) === 'panitia' ? '' : 'display:none;' }}">
     <div class="form-group">
         <label class="form-label">Divisi :</label>
-        <select name="id_divisi" class="form-control form-select select2">
+        <select name="id_divisi" class="form-control form-select select2" style="width: 40%;">
             <option value="" disable selected>Pilih Divisi</option>
             @foreach($divisis as $divisi)
                 <option value="{{ $divisi->id_divisi }}" {{ (old('id_divisi', $panitia->id_divisi ?? '') == $divisi->id_divisi) ? 'selected' : '' }}>

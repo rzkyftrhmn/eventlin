@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div class="container">
     <div class="page-header">
         <div>
             <h1 class="page-title">Edit Proposal</h1>
@@ -25,5 +23,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection

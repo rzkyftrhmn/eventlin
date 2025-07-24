@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Proposal;
+use App\Models\Peserta;
+use App\Models\Panitia;
+use App\Models\Divisi;
 use App\Models\Admin;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -74,7 +78,20 @@ class AuthAdminController extends Controller
     public function dashboard()
     {
         $user = auth('admin')->user();
-        return view('auth.admin.dashboard', compact('user'));
+        
+        $totalProposal = Proposal::count();
+        $totalPeserta = Peserta::count();
+        $totalPanitia = Panitia::count();
+        $totalDivisi = Divisi::count();
+        $totalAdmin = Admin::count();
+        return view('auth.admin.dashboard', compact(
+            'user',
+            'totalProposal',
+            'totalPeserta',
+            'totalPanitia',
+            'totalDivisi',
+            'totalAdmin'
+        ));
     }
 
 }

@@ -33,7 +33,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Tanggal Kegiatan :</label>
-                                <input class="form-control" type="date" name="tanggal_kegiatan" require>
+                                <input class="form-control" type="date" name="tanggal_kegiatan" style="width: 40%;" require>
                             </div>
                             <button type="submit" class="btn btn-green">Simpan</button>
                             <button type="button" class="btn btn-danger" onclick="window.history.back();">Cancel</button>
