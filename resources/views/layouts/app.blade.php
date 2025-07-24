@@ -45,6 +45,13 @@
             <a href="{{ route('peserta.profile', auth('peserta')->user()->nim) }}" style="margin-right: 10px;">
                 Profil Saya
             </a>
+            @php
+            $peserta = Auth::user();
+            @endphp
+            
+            @if ($peserta->proposal->is_berbayar)
+                <a href="{{route('pembayaran.konfirmasi',$peserta->nim)}}">Pembayaran</a>
+            @endif
             {{-- Logout Peserta --}}
             <form action="{{ route('peserta.logout') }}" method="POST" style="display: inline;">
                 @csrf

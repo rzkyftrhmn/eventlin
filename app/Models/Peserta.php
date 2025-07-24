@@ -33,6 +33,6 @@ class Peserta extends Model implements AuthenticatableContract
 
     public function pembayaranTiket()
     {
-        return $this->hasMany(PembayaranTiket::class, 'nim', 'nim');
+        return $this->hasOne(PembayaranTiket::class, 'nim', 'nim');
     }
 }

@@ -64,7 +64,7 @@ class PesertaController extends Controller
 
         if (!$kuota || $kuota->status_pendaftaran !== 'Buka' || $kuota->kuota_terpakai >= $kuota->total_kuota) {
             if (auth('admin')->check()) {
-                return redirect()->route('proposal.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
+                return redirect()->route('proposals.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
             } elseif (auth('panitia')->check()) {
                 return redirect()->route('proposal.superpanitia.show', $id_proposal)->with('error', 'Pendaftaran ditutup atau kuota penuh.');
             }
@@ -102,7 +102,7 @@ class PesertaController extends Controller
         $kuota->increment('kuota_terpakai');
 
         if (auth('admin')->check()) {
-            return redirect()->route('proposal.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
+            return redirect()->route('proposals.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
         } elseif (auth('panitia')->check()) {
             return redirect()->route('proposal.superpanitia.show', $id_proposal)->with('success', 'Peserta berhasil ditambahkan.');
         }

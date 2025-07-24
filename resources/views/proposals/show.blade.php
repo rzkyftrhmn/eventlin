@@ -149,9 +149,9 @@
             <a href="{{ route('kuota.edit', $proposal->kuotaPendaftaran->id_kuota_pendaftaran) }}">Edit Kuota</a>
         @endif
         <hr>
-     <h3>Peserta Acara</h3>
-        <a href="{{ route('peserta.created', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a><br>
-        <a href="{{ route('peserta.byProposal', ['id_proposal' => $proposal->id_proposal]) }}">Lihat Semua</a>
+        <h3>Peserta Acara</h3>
+            <a href="{{ route('peserta.created', ['id_proposal' => $proposal->id_proposal]) }}">+ Tambah Peserta</a><br>
+            <a href="{{ route('peserta.byProposal', ['id_proposal' => $proposal->id_proposal]) }}">Lihat Semua</a>
         @if (session('error'))
             <div style="color: red; font-weight: bold;">
                 {{ session('error') }}
@@ -179,14 +179,18 @@
         @else
             <p>Belum ada peserta yang mendaftar.</p>
         @endif
-
+        @if(auth('panitia')->check() && strtolower(auth('panitia')->user()->jabatan_panitia) === 'bendahara' && $proposal->is_berbayar)
+            <a href="{{ route('pembayaran.verifikasi', $proposal->id_proposal) }}" class="btn btn-primary mt-3">
+                Verifikasi Pembayaran Tiket
+            </a>
+        @endif
     @else
         <p>Status proposal: {{ $proposal->status_proposal }}</p>
         <p>Proposal ini belum disetujui.</p>
     @endif
+
     <hr>
     @if(auth('admin')->check())
-    <hr>
     <h3>Pengaturan Divisi yang Boleh Melakukan Absensi</h3>
     <form action="{{ route('absensiDivisi.store', $proposal->id_proposal) }}" method="POST">
             @csrf
