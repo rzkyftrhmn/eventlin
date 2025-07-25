@@ -9,12 +9,10 @@
         <strong>{{ $proposal->nama_acara }}</strong> <br>
         Kuota: {{ $proposal->kuotaPendaftaran->kuota_terpakai }}/{{ $proposal->kuotaPendaftaran->total_kuota }} <br>
 
-        {{-- Tombol daftar --}}
         <a href="{{ route('peserta.formRegister', $proposal->id_proposal) }}">
             <button>Daftar Sekarang</button>
         </a>
 
-        {{-- Tombol login --}}
         <a href="{{ route('peserta.loginForm', $proposal->id_proposal) }}">
             <button>Login</button>
         </a>

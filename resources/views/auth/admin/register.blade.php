@@ -70,7 +70,7 @@
 								<form class="login100-form validate-form" action="{{ route('admin.register') }}" method="POST">
                                     @csrf
 									<span class="login100-form-title">
-										Registration
+										Register
 									</span>
 									<div class="wrap-input100 validate-input">
 										<input class="input100" type="text" name="nama_admin" placeholder="Nama Admin" value="{{ old('nama_admin') }}">
@@ -118,7 +118,7 @@
                                         </button>
 									</div>
 									<div class="text-center pt-3">
-										<p class="text-dark mb-0">Sudah Memiliki akun?<a href="{{ route('admin.login') }}" class="text-primary ms-1">Sign In</a></p>
+										<p class="text-dark mb-0">Sudah Memiliki akun?<a href="{{ route('admin.login') }}" class="text-primary ms-1">LogIn</a></p>
 									</div>
 								</form>
 							</div>

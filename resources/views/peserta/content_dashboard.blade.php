@@ -9,25 +9,14 @@
     <div class="col-lg-7 mb-5">
         <div class="card-filter">
 
-        <!-- Kota -->
-        <!-- <div class="filter-item">
-            <label for="kota">Kota</label>
-            <select id="kota">
-            <option>All</option>
-            <option>Bandung</option>
-            <option>Jakarta</option>
-            <option>semarang</option>
-            </select>
-        </div> -->
-
         <!-- Kategori -->
         <div class="filter-item-content">
             <label for="kategori">Kategori</label>
             <select id="kategori">
-            <option>All</option>
-            <option>seminar</option>
-            <option>konser</option>
-            <option>webinar</option>
+                <option>All</option>
+                <option>seminar</option>
+                <option>konser</option>
+                <option>webinar</option>
             </select>
         </div>
 
@@ -56,23 +45,26 @@
         </div>
         </div>
 
+        @foreach($proposals as $proposal)
         <div class="col-4">
-        <div class="card-event">
-            <div class="img">
-            <img src="{{ asset('assets/img-peserta/event-konser2.jpg')}}" alt="">
-            </div>
-            <div class="title-event-card">
-            <h2>Entomology International Congress of Vancouver</h2>
-            <div class="date d-flex">
-                <img src="{{ asset('assets/img-peserta/calendar (1).png')}}" alt="">
-                <p>Sunday, 20 Dec 2025</p>
-            </div>
-            <a href="detail-event.html">See more</a>
+            <div class="card-event">
+                <div class="img">
+                    <img src="{{ asset('assets/img-peserta/event-konser2.jpg')}}" alt="">
+                </div>
+                <div class="title-event-card">
+                    <h2>{{ $proposal->nama_acara }}r</h2>
+                    <div class="date d-flex">
+                        <img src="{{ asset('assets/img-peserta/calendar (1).png')}}" alt="">
+                        <p>{{ $proposal->tanggal_acara }}</p>
+                    </div>
+                    <p>Kuota : {{ $proposal->kuotaPendaftaran->kuota_terpakai }}/{{ $proposal->kuotaPendaftaran->total_kuota }}</p>
+                    <a href="detail-event.html">See more</a>
+                </div>
             </div>
         </div>
-        </div>
+        @endforeach
         
-        <div class="col-4">
+        <!-- <div class="col-4">
         <div class="card-event">
             <div class="img">
             <img src="{{ asset('assets/img-peserta/event-konser.jpg')}}" alt="">
@@ -150,7 +142,7 @@
             <a href="#">See more</a>
             </div>
         </div>
-        </div>
+        </div> -->
     </div>
     </div>
 </div>
@@ -164,6 +156,7 @@
         </h3>
         </div>
 
+        
         <div class="col-4">
         <div class="card-kebijakan text-center">
             <div class="img">
@@ -208,3 +201,25 @@
     <h4 class="text-white text-center">© 2025 Eventln – Platform Event Kampus Indonesia. All rights reserved.</h4>
 </div>
 @endsection
+
+<!-- <h2>Pilih Proposal untuk Daftar</h2>
+
+@if(session('error')) <p style="color:red">{{ session('error') }}</p> @endif
+@if(session('success')) <p style="color:green">{{ session('success') }}</p> @endif
+
+<ul>
+@foreach($proposals as $proposal)
+    <li style="margin-bottom: 20px;">
+        <strong>{{ $proposal->nama_acara }}</strong> <br>
+        Kuota: {{ $proposal->kuotaPendaftaran->kuota_terpakai }}/{{ $proposal->kuotaPendaftaran->total_kuota }} <br>
+
+        <a href="{{ route('peserta.formRegister', $proposal->id_proposal) }}">
+            <button>Daftar Sekarang</button>
+        </a>
+
+        <a href="{{ route('peserta.loginForm', $proposal->id_proposal) }}">
+            <button>Login</button>
+        </a>
+    </li>
+@endforeach
+</ul> -->

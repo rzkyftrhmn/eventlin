@@ -198,6 +198,8 @@ Route::middleware(['auth:panitia'])->group(function () {
 // Pendaftaran peserta (hanya jika kuota masih ada dan status = Buka)
 // kondisi ketika user belum login
 Route::middleware('guest:peserta')->group(function () {
+    Route::get('/dashboard/peserta', [AuthPesertaController::class, 'dashboard'])->name('peserta.content_dashboard');
+
     Route::get('/', [AuthPesertaController::class, 'pilihProposal'])->name('peserta.pilihProposal');
     //memilih proposal
     Route::get('/daftar/{id_proposal}', [AuthPesertaController::class, 'showRegisterForm'])->name('peserta.formRegister');
@@ -210,22 +212,15 @@ Route::middleware('guest:peserta')->group(function () {
 //KONDISI ketika user sudah login
 Route::middleware('auth:peserta')->group(function () {
     //dashboard peserta
-    Route::get('/dashboard/peserta', [AuthPesertaController::class, 'dashboard'])->name('peserta.dashboard');
+    Route::get('/dashboard/peserta', [AuthPesertaController::class, 'dashboard'])->name('peserta.content_dashboard');
     Route::get('/events', [ProposalController::class, 'allEvents'])->name('peserta.all_event');
-    Route::get('/dashboard/contentPeserta', function () {
-        return view('peserta.content_dashboard');
-    })->name('peserta.content_dashboard');
 
     Route::get('/event/detail', function () {
         return view('peserta.detail_event');
     })->name('peserta.detail_event');
 
-    Route::get('/booking', function () {
-        return view('peserta.booking');
-    })->name('peserta.booking');
-
     //log out peserta
-    Route::post('/logout/peserta', [AuthPesertaController::class, 'logout'])
+    Route::get('/logout/peserta', [AuthPesertaController::class, 'logout'])
         ->name('peserta.logout');
     Route::get('/peserta/profile/{nim}', [PesertaController::class, 'show'])
         ->name('peserta.profile');
@@ -249,6 +244,8 @@ Route::middleware('auth:peserta')->group(function () {
 
 //middleware admin dan super panitia
 Route::middleware(['auth.super'])->group(function () {
+    Route::get('/halaman-verifikisi/{id}', [PembayaranTiketController::class, 'index'])->name('pembayaran.verifikasi');
+    Route::put('/verifikasi-pembayaran/{id}', [PembayaranTiketController::class, 'updateStatus'])->name('verifikasi.pembayaran.update');
 //rundown
     Route::post('/rundowns', [RundownController::class, 'store'])->name('rundowns.store');
     Route::get('/rundowns/{id}', [RundownController::class, 'show'])->name('rundowns.show');

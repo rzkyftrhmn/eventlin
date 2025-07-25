@@ -16,7 +16,7 @@
                     <p class="title mb-1">Daftar sekarang dan jadi bagian dari</p>
                     <p class="title mt-0">berbagai event penuh ilmu & inspirasi!</p>
 
-                    <form action="{{ route('peserta.register') }}" method="POST">
+                    <form action="{{ route('peserta.register', $proposal->id_proposal) }}" method="POST">
                         @csrf
                     
                         <div class="mt-4 mb-3">

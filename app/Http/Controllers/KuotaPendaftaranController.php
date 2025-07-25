@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\KuotaPendaftaran;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KuotaPendaftaranController extends Controller
 {
@@ -34,8 +35,10 @@ class KuotaPendaftaranController extends Controller
             'status_pendaftaran' => $request->status_pendaftaran,
         ]);
         if (auth('admin')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('proposals.show', $kuota->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
         } elseif (auth('panitia')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('proposal.superpanitia.show', $kuota->id_proposal)->with('success', 'Rundown berhasil ditambahkan.');
         }
     }

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
         <div class="page-header">
             <div>
                 <h1 class="page-title">Edit Rundown</h1>
@@ -11,6 +10,15 @@
             <div class="col-lg-12">
                 <div class="card custom-card">
                     <div class="card-body">
+                        @if ($errors->any())
+                            <div style="color: red; font-weight: bold;">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <form action="{{ route('rundowns.update', $rundown->id_rundown) }}" method="POST">
                             @csrf
                             @method('PUT')
@@ -32,5 +40,4 @@
                 </div>
             </div>
         </div>
-    </div>
 @endsection

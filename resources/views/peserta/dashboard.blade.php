@@ -62,7 +62,9 @@
             @endguest
           </div>
 
+          @auth('peserta')
           <a href="{{ route('peserta.all_event') }}" class="btn browse-event" type="submit">Browse Events</a>
+          @endauth
         </div>
       </div>
     </nav>

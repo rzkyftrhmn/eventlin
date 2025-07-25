@@ -207,6 +207,7 @@
                                                 <td>
                                                     <a href="{{ route('rundowns.show', $rundown->id_rundown) }}" class="btn btn-info btn-sm rounded-11 me-2" data-bs-toggle="tooltip" data-bs-original-title="Lihat" style="height: 30px;"><i class="fe fe-eye" style="font-size: 16px;"></i></a>
                                                     <a href="{{ route('rundowns.edit', $rundown->id_rundown) }}" class="btn btn-primary btn-sm rounded-11 me-2" data-bs-toggle="tooltip" data-bs-original-title="Edit" style="height: 30px;"><i class="fe fe-edit" style="font-size: 16px;"></i></a>
+                                                    <a href="{{ route('rekap.rundown', $rundown->id_rundown) }}" class="btn btn-success btn-sm rounded-11 me-2" data-bs-toggle="tooltip" data-bs-original-title="Rekap" style="height: 30px;"><i class="fe fe-file" style="font-size: 16px;"></i></a>
                                                     <form action="{{ route('rundowns.destroy', $rundown->id_rundown) }}" method="POST" data-bs-original-title="Hapus" class="form-konfirmasi" style="display:inline-block;">
                                                         @csrf
                                                         @method('DELETE')
@@ -286,6 +287,7 @@
                                             <th>Nim</th>
                                             <th>Nama</th>
                                             <th>Email</th>
+                                            <th>aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -295,12 +297,20 @@
                                             <td>{{ $peserta->nim }}</td>
                                             <td>{{ $peserta->nama_peserta }}</td>
                                             <td>{{ $peserta->email }}</td>
+                                            <td>
+                                                <a href=""></a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                                 @else
                                     <p class="text-center">Belum ada Peserta yang mendaftar</p>
+                                @endif
+                                @if(auth('panitia')->check() && strtolower(auth('panitia')->user()->jabatan_panitia) === 'bendahara' && $proposal->is_berbayar)
+                                    <a href="{{ route('pembayaran.verifikasi', $proposal->id_proposal) }}" class="btn btn-primary mt-3">
+                                        Verifikasi Pembayaran Tiket
+                                    </a>
                                 @endif
                             </div>
 
@@ -311,27 +321,31 @@
 
                         <hr>
 
+                        @if(auth('admin')->check())
                         <form action="{{ route('absensiDivisi.store', $proposal->id_proposal) }}" method="POST">
                             @csrf
-                            <h1 class="page-title">Pengaturan divisi</h1>
-                            <p class="mt-1">Pilih Divisi yang bisa melakukan Absen Panitia :</p>
-                            <div class="mb-3 mt-3">
+                            <div>
+                                <div>
+                                    <h1 class="page-title mt-3 mb-4">Pengaturan Divisi yang Boleh Melakukan Absensi</h1>
+                                </div>
                                 @foreach ($divisis as $divisi)
-                                    <label style="display: block;font-size: 15px;">
-                                        <input type="radio" name="divisi_id" value="{{ $divisi->id_divisi }}"
+                                    <label style="display: block; margin-bottom: 5px;">
+                                        <input type="radio" name="divisi_id[]" value="{{ $divisi->id_divisi }}"
                                             {{ $proposal->divisiAbsensi->contains($divisi->id_divisi) ? 'checked' : '' }}>
                                         {{ $divisi->nama_divisi }}
                                     </label>
                                 @endforeach
                             </div>
-                            <button type="submit" class="btn btn-primary">Simpan Akses Absensi</button>
-                            @auth('admin')
-                            <a href="{{ route('proposals.index') }}" class="btn btn-danger" >Cancel</a>
-                            @endauth
-                            @auth('panitia')
-                            <a href="{{ route('proposal.panitia.show') }}" class="btn btn-danger" >Cancel</a>
-                            @endauth
+                            <button class="btn btn-primary mb-2" type="submit">Simpan Akses Absensi</button>
                         </form>
+                        @endif
+                        @if (auth('admin')->check())
+                            <a class="btn btn-danger" href="{{ route('proposals.index') }}">Kembali</a>
+                        @elseif (auth('panitia')->check() && in_array(auth('panitia')->user()->jabatan_panitia, ['ketua', 'sekretaris', 'bendahara']))
+                            <a class="btn btn-danger" href="{{ route('proposal.panitia.show') }}">Kembali ke Proposal Saya</a>
+                        @endif
+
+
                     </div>
                 </div>
             </div>

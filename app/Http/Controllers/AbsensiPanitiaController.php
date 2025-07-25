@@ -8,6 +8,7 @@ use App\Models\Panitia;
 use App\Models\Rundown;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 
@@ -128,6 +129,8 @@ class AbsensiPanitiaController extends Controller
             'keterangan' => null,
         ]);
 
+        
+        Alert::alert('Sukses', 'Absensi Berhasil Dicatat!', 'success');
         return back()->with('success', 'Absensi berhasil dicatat untuk ' . $panitia->nama_panitia);
     }
 

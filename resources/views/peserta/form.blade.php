@@ -3,16 +3,6 @@
     @if(isset($peserta))
         @method('PUT')
     @endif
-    @if ($errors->any())
-        <div style="color: red; font-weight: bold;">
-            <p>Validasi gagal:</p>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <div class="form-group">
         <label class="form-label">NIM :</label>

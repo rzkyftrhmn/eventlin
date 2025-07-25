@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Proposal;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AbsensiAksesDivisiController extends Controller
 {
@@ -18,7 +19,7 @@ class AbsensiAksesDivisiController extends Controller
 
         // Sync: hapus semua divisi lama dan ganti dengan yang baru
         $proposal->divisiAbsensi()->sync($validated['divisi_id'] ?? []);
-
+        Alert::alert('Sukses', 'Divisi absensi berhasil diperbaharui!', 'success');
         return back()->with('success', 'Divisi absensi berhasil diperbarui.');
     }
 

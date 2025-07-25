@@ -99,7 +99,7 @@
                                             </button>
                                         </div>
 									<div class="text-center pt-3">
-										<p class="text-dark mb-0">Not a member?<a href="{{ route('admin.registerForm') }}" class="text-primary ms-1">Create an Account</a></p>
+										<p class="text-dark mb-0">Tidak Memiliki Akun?<a href="{{ route('admin.registerForm') }}" class="text-primary ms-1">Register</a></p>
 									</div>
 								</form>
 							</div>

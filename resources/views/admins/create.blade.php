@@ -7,16 +7,6 @@
         </div>
     </div>
 
-    @if ($errors->any())
-        <div style="color:red;">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <div class="row row-sm">
         <div class="col-lg-12">
             <div class="card custom-card">
@@ -41,7 +31,7 @@
 
                         <div class="form-group">
                             <label class="form-label">Password :</label>
-                            <input class="form-control" type="password" name="password" value="{{ old('email') }}" required>
+                            <input class="form-control" type="password" name="password" required>
                             <small id="passwordHelp" style="display:block;color:gray;">
                                 Minimal 8 karakter, termasuk huruf besar, huruf kecil, angka, dan simbol
                             </small>

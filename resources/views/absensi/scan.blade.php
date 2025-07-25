@@ -1,47 +1,55 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Absensi QR - {{ $rundown->judul_rundown }} ({{ $rundown->tanggal_kegiatan }})</h2>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title mb-3">Absensi QR - {{ $rundown->judul_rundown }} ({{ $rundown->tanggal_kegiatan }})</h1>
+        </div>
+    </div>
+    
+    <div class="row row-sm">
+        <div class="col-lg-12">
+            <div class="card custom-card">
+                <div class="card-body">
 
-    {{-- Notifikasi --}}
-    @if (session('success'))
-        <div style="color: green;">{{ session('success') }}</div>
-    @endif
-    @if (session('error'))
-        <div style="color: red;">{{ session('error') }}</div>
-    @endif
+                    @if (session('success'))
+                        <div style="color: green;">{{ session('success') }}</div>
+                    @endif
+                    @if (session('error'))
+                        <div style="color: red;">{{ session('error') }}</div>
+                    @endif
 
-    <p id="loading-status" style="font-weight: bold; color: blue;">Mempersiapkan kamera...</p>
-    <div id="reader" style="width: 300px; margin-bottom: 15px;"></div>
+                    <p id="loading-status" style="font-weight: bold; color: blue;">Mempersiapkan kamera...</p>
+                    <div id="reader" style="width: 300px; margin-bottom: 15px;"></div>
 
 
-    {{-- Hasil Scan --}}
-    <p id="scan-result"></p>
+                    {{-- Hasil Scan --}}
+                    <p id="scan-result"></p>
 
-    <form method="POST" action="{{ route('absensi.store') }}">
-        @csrf
+                    <form method="POST" action="{{ route('absensi.store') }}">
+                        @csrf
 
-        {{-- Hidden Email (yang akan dikirim) --}}
-        <input type="hidden" name="email" id="email-hidden">
+                        {{-- Hidden Email (yang akan dikirim) --}}
+                        <input type="hidden" name="email" id="email-hidden">
 
-        {{-- Tampilkan Email hasil scan --}}
-        <label>Email dari QR:</label><br>
-        <input type="text" id="email-display" readonly style="width: 300px;"><br>
-        @error('email')
-            <div style="color: red;">{{ $message }}</div>
-        @enderror
+                        {{-- Tampilkan Email hasil scan --}}
+                        <label>Email dari QR:</label><br>
+                        <input class="form-control" type="text" id="email-display" readonly style="width: 300px;"><br>
+                        @error('email')
+                            <div style="color: red;">{{ $message }}</div>
+                        @enderror
 
-        {{-- Hidden rundown --}}
-        <input type="hidden" name="id_rundown" value="{{ $rundown->id_rundown }}">
+                        {{-- Hidden rundown --}}
+                        <input type="hidden" name="id_rundown" value="{{ $rundown->id_rundown }}">
 
-        <br>
-        <button type="submit">Absen</button>
-    </form>
+                        <br>
+                        <button class="btn btn-primary" type="submit">Absen</button>
+                    </form> 
 
-    {{-- Scanner --}}
-    <style>
-
-    </style>    
+                </div>
+            </div>
+        </div>
+    </div> 
    
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>

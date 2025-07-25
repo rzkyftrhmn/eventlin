@@ -57,7 +57,7 @@ class PersetujuanController extends Controller
                 ]);
             }
         }
-
+        Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
         return redirect()->route('persetujuans.indexAkademik')->with('success', 'Status proposal berhasil diperbarui.');
     }
 
@@ -83,6 +83,7 @@ class PersetujuanController extends Controller
             Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('proposals.index')->with('success', 'Panitia berhasil dihapus.');
         } elseif (auth('panitia')->check()) {
+            Alert::alert('Sukses', 'Data Berhasil Diupdate!', 'success');
             return redirect()->route('proposal.panitia.show')->with('success', 'Panitia berhasil dihapus.');
         }
 

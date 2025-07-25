@@ -17,7 +17,7 @@
                         @include('proposals.form', ['proposal' => null])
 
                         <button type="submit" class="btn btn-green">Submit</button>
-                        <button type="cancel" class="btn btn-danger" onclick="window.history.back();">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="window.history.back();">Cancel</button>
                     </form>
                 </div>      
             </div>

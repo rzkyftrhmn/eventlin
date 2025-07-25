@@ -61,6 +61,9 @@ class AuthAdminController extends Controller
             'nama_admin' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email',
             'password' => 'required|min:8|confirmed',
+        ],[
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.min' => 'Password minimal 8 karakter.',
         ]);
 
         $admin = Admin::create([

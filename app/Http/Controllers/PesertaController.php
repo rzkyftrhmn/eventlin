@@ -114,7 +114,7 @@ class PesertaController extends Controller
 
     public function edit($nim)
     {
-          $peserta = Peserta::findOrFail($nim);
+        $peserta = Peserta::findOrFail($nim);
         return view('peserta.edit', compact('peserta'));
     }
 
@@ -144,6 +144,8 @@ class PesertaController extends Controller
                 'regex:/[0-9]/',
             ],
             // tanggal_pendaftaran dihapus dari validasi
+        ],[
+            'password.min' => 'Password minimal 8 karakter.',
         ]);
 
         $data = [
@@ -179,7 +181,10 @@ class PesertaController extends Controller
         $peserta = Peserta::findOrFail($nim);
         $idProposal = $peserta->id_proposal;
         Peserta::where('nim', $nim)->delete();
-        return redirect()->route('peserta.byProposal')->with('success', 'Peserta berhasil dihapus.');
+        Alert::alert('Sukses', 'Data Berhasil Dihapus!', 'success');
+        return redirect()->route('peserta.byProposal', ['id_proposal' => $idProposal])
+            ->with('success', 'Peserta berhasil dihapus.');
+
     }
     
 }

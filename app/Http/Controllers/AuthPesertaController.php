@@ -18,7 +18,7 @@ class AuthPesertaController extends Controller
                 ->whereColumn('kuota_terpakai', '<', 'total_kuota');
         })->get();
 
-        return view('landing.pilih_proposal', compact('proposals'));
+        return view('peserta.content_dashboard', compact('proposals'));
     }
     public function showRegisterForm($id_proposal)
     {
@@ -81,7 +81,7 @@ class AuthPesertaController extends Controller
 
         if (Auth::guard('peserta')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('peserta.dashboard'));
+            return redirect()->intended(route('peserta.content_dashboard'));
         }
 
         Alert::toast('NIM atau Password anda salah!', 'error');
@@ -100,6 +100,6 @@ class AuthPesertaController extends Controller
     public function dashboard()
     {
         $peserta = Auth::guard('peserta')->user();
-        return view('peserta.dashboard', compact('peserta'));
+        return view('peserta.content_dashboard', compact('peserta'));
     }
 }
