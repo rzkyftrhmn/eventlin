@@ -20,6 +20,7 @@ class AuthPesertaController extends Controller
 
         return view('peserta.content_dashboard', compact('proposals'));
     }
+    
     public function showRegisterForm($id_proposal)
     {
         $proposal = Proposal::findOrFail($id_proposal);

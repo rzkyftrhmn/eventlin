@@ -15,7 +15,6 @@
             <div class="card custom-card">
                 <div class="card-body">
                     <div class="table-responsive mt-4">
-                        @if($pembayarans->count())
                         <table class="table border text-nowrap text-md-nowrap table-striped mg-b-0">
                             <thead>
                                 <tr>
@@ -53,9 +52,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        @else
-                            <p colspan="5" style="text-align: center;">Tidak ada Peserta yang melakukan pembayaran.</p>
-                        @endif
+                        
                     </div>
                 </div>
             </div>

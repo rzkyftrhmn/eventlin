@@ -30,7 +30,7 @@
                                 <a class="btn btn-primary" href="{{ route('proposal.panitia.show.read', ['id' => $id_proposal]) }}">Kembali ke Detail Proposal</a>
                             @endif
                             <br>
-                            <a class="btn btn-primary" href="{{ route('rundowns.panitia.export.pdf', $rundown->id_rundown) }}" target="_blank">🖨 Export PDF</a>
+                            <a class="btn btn-primary" href="{{ route('rundowns.panitia.export.pdf', $rundown->id_rundown) }}" target="_blank" style="margin-left: 9px;">🖨 Export PDF</a>
                         @endif
                     </div>
                     <div class="table-responsive mt-4">

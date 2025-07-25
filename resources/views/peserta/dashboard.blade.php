@@ -55,7 +55,6 @@
                 <a href="{{route('pembayaran.konfirmasi',$peserta->nim)}}">Pembayaran</a>
             @endif
             @endauth
-
           </div>
         </div>
       </div>
