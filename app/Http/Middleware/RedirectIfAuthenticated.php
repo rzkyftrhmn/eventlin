@@ -22,7 +22,7 @@ class RedirectIfAuthenticated extends MiddlewareRedirectIfAuthenticated
                     case 'panitia':
                         return redirect()->route('panitia.dashboard'); // sesuaikan dengan route-mu
                     case 'peserta':
-                        return redirect()->route('peserta.dashboard');
+                        return redirect()->route('peserta.content_dashboard');
                     default:
                         return redirect('/');
                 }

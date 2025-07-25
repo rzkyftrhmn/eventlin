@@ -28,6 +28,7 @@
             </li>
           </ul>
 
+
           <div class="d-flex align-items-center ms-auto nav-title">
             @auth('peserta')
             <div class="dropdown hover-dropdown">
@@ -50,21 +51,12 @@
                 </li>
               </ul>
             </div>
+            @if ($peserta->proposal->is_berbayar)
+                <a href="{{route('pembayaran.konfirmasi',$peserta->nim)}}">Pembayaran</a>
+            @endif
             @endauth
 
-            @guest('peserta')
-            <a href="#" class="text-white me-3 d-flex align-items-center" style="text-decoration: none;">
-              <img src="{{ asset('assets/img-peserta/icon_login_500px.png')}}" class="login" alt="Login" width="20" class="me-1">Login
-            </a>
-            <a href="#" class="text-white me-3 d-flex align-items-center" style="text-decoration: none;">
-              <img src="{{ asset('assets/img-peserta/icon_register_500px.png')}}" alt="Register" width="25" class="me-1">Register
-            </a>
-            @endguest
           </div>
-
-          @auth('peserta')
-          <a href="{{ route('peserta.all_event') }}" class="btn browse-event" type="submit">Browse Events</a>
-          @endauth
         </div>
       </div>
     </nav>

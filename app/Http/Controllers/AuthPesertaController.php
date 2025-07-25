@@ -100,6 +100,6 @@ class AuthPesertaController extends Controller
     public function dashboard()
     {
         $peserta = Auth::guard('peserta')->user();
-        return view('peserta.content_dashboard', compact('peserta'));
+        return view('auth.peserta.dashboard', compact('peserta'));
     }
 }

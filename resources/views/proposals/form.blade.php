@@ -51,7 +51,7 @@
 
     <div class="form-group">
         <label class="form-label">Tanggal Acara :</label>
-        <input type="date" class="form-control" name="tanggal_acara" value="{{ old('tanggal_acara', $proposal->tanggal_acara ?? '') }}" style="width: 40%;" required>
+        <input type="date" class="form-control" name="tanggal_acara" value="{{ old('tanggal_acara', $proposal->tanggal_acara ?? '') }}" style="width: 40%;" required min="{{date('Y-m-d')}}>
         @error('tanggal_acara')
             <div class="text-danger">{{ $message }}</div>
         @enderror

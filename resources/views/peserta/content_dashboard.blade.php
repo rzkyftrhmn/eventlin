@@ -4,7 +4,7 @@
     <h2>Jadilah bagian dari moment yang menginspirasi!</h2>
 </div>
 
-<div class="container">
+{{-- <div class="container">
     <div class="row justify-content-center">
     <div class="col-lg-7 mb-5">
         <div class="card-filter">
@@ -30,7 +30,7 @@
         </div>
     </div>
     </div>
-</div>
+</div> --}}
 
 <div class="event-section p-5">
     <div class="blur-svg blur-blue" style="background-image: url(/assets/img-peserta/blur-blue.png);"></div>
@@ -57,8 +57,15 @@
                         <img src="{{ asset('assets/img-peserta/calendar (1).png')}}" alt="">
                         <p>{{ $proposal->tanggal_acara }}</p>
                     </div>
-                    <p>Kuota : {{ $proposal->kuotaPendaftaran->kuota_terpakai }}/{{ $proposal->kuotaPendaftaran->total_kuota }}</p>
-                    <a href="detail-event.html">See more</a>
+                    {{-- Tombol daftar --}}
+                    <a href="{{ route('peserta.formRegister', $proposal->id_proposal) }}">
+                        <button>Daftar Sekarang</button>
+                    </a>
+
+                    {{-- Tombol login --}}
+                    <a href="{{ route('peserta.loginForm', $proposal->id_proposal) }}">
+                        <button>Login</button>
+                    </a>
                 </div>
             </div>
         </div>
