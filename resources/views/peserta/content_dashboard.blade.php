@@ -21,7 +21,7 @@
             <div class="col-lg-4 col-sm-12">
                 <div class="card-event">
                     <div class="img">
-                        <img src="{{ asset('assets/img-peserta/event-konser2.jpg')}}" alt="">
+                        <img src="{{ asset('assets/img-peserta/event123.jpg')}}" alt="">
                     </div>
                     <div class="title-event-card">
                         <h2 style="margin-left: 4px;">{{ $proposal->nama_acara }}</h2>
