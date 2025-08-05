@@ -12,7 +12,7 @@
 
 
 		<!-- FAVICON -->
-		<link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/brand/favicon.ico') }}" />
+		<link rel="icon" type="image/png" href="{{ asset('assets/img-peserta/event_default.png')}}">
 
 		<!-- TITLE -->
 		<title>@yield('title')</title>

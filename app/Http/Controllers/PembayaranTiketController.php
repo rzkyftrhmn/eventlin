@@ -9,6 +9,7 @@ use App\Models\Proposal;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Container\Attributes\Storage;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Storage as FacadesStorage;
 
 class PembayaranTiketController extends Controller
@@ -143,6 +144,8 @@ class PembayaranTiketController extends Controller
             'status_pembayaran' => $request->status_pembayaran,
         ]);
 
+        
+        Alert::alert('Sukses', 'Status pembayaran berhasil diperbarui!', 'success');
         return back()->with('success', 'Status pembayaran berhasil diperbarui.');
     }
 

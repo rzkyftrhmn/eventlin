@@ -60,3 +60,20 @@ h2{
     text-decoration: none;
     color: #3488C0;
 }
+
+.left-card{
+    min-height: 100vh;
+}
+
+.img img{
+    height: 500px; 
+    width: 500px;
+}
+@media only screen and (max-width: 768px){
+    .left-card{
+        display: none !important;
+    }
+    .right-card{
+        height: 100vh !important;
+    }
+}

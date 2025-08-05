@@ -46,7 +46,10 @@ h2{
   justify-content: center; 
   width: 300px;
   height: 54px;
-  color: #fff;
+}
+
+.button input{
+    color: #fff;
 }
 
 .button:hover{
@@ -60,4 +63,13 @@ h2{
 .content-title a{
     text-decoration: none;
     color: #3488C0;
+}
+
+@media only screen and (max-width: 768px){
+    .right-card{
+        display: none !important;
+    }
+    .left-card{
+        height: 100vh !important;
+    }
 }

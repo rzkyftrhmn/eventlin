@@ -10,12 +10,12 @@
   <body>
     <div class="container">
         <div class="row">
-            <div class="col-6 d-flex align-items-center justify-content-center" style="height: 100vh;">
+            <div class="col-12 col-md-6 left-card d-flex align-items-center justify-content-center">
                 <div class="img">
-                    <img style="height: 500px; width: 500px;" src="{{ asset('assets/images/login/login.png') }}" alt="">
+                    <img src="{{ asset('assets/images/login/login.png') }}" alt="">
                 </div>
             </div>
-            <div class="col-6 text-center d-flex align-items-center justify-content-center">
+            <div class="col-12 col-md-6 right-card text-center d-flex align-items-center justify-content-center">
                 <div class="card-form">
 
                     <h2 class="mb-2">Log In</h2>
@@ -46,10 +46,6 @@
 
                         <button type="submit" class="button">Login</button>
                     </form>
-
-                    <div class="content-title mt-3">
-                        <p>Tidak memiliki akun? <a href="#">Sign up</a></p>
-                    </div>
 
                 </div>
             </div>

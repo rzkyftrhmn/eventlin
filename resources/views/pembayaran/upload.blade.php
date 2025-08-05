@@ -1,3 +1,4 @@
+
 <h2>Upload Bukti Pembayaran</h2>
 
 @if($peserta->proposal->is_berbayar)

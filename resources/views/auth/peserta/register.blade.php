@@ -10,7 +10,7 @@
   <body>
     <div class="container">
         <div class="row">
-            <div class="col-6 text-center d-flex align-items-center justify-content-center">
+            <div class="col-12 col-md-6 left-card text-center d-flex align-items-center justify-content-center">
                 <div class="card-form">
                     <h2 class="mb-2">Register</h2>
                     <p class="title mb-1">Daftar sekarang dan jadi bagian dari</p>
@@ -56,11 +56,10 @@
                         <div class="button">
                             <input type="submit" class="btn" value="Register">
                         </div>
-
                     </form>
                 </div>
             </div>
-            <div class="col-6 d-flex align-items-center justify-content-center" style="height: 100vh;">
+            <div class="col-12 col-md-6 d-flex right-card align-items-center justify-content-center" style="height: 100vh;">
                 <div class="img">
                     <img style="height: 500px; width: 500px;" src="{{ asset('assets/images/login/register.png') }}" alt="">
                 </div>

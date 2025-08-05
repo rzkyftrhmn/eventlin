@@ -98,9 +98,9 @@
                                                 Login
                                             </button>
                                         </div>
-									<div class="text-center pt-3">
+									<!-- <div class="text-center pt-3">
 										<p class="text-dark mb-0">Tidak Memiliki Akun?<a href="{{ route('admin.registerForm') }}" class="text-primary ms-1">Register</a></p>
-									</div>
+									</div> -->
 								</form>
 							</div>
 						</div>

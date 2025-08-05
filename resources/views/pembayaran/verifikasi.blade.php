@@ -40,12 +40,12 @@
                                             <form action="{{ route('verifikasi.pembayaran.update', $pembayaran->id_pembayaran) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')
-                                                <select name="status_pembayaran">
+                                                <select name="status_pembayaran" class="form-control form-select select2" style="width: 140px;">
                                                     <option value="Menunggu" {{ $pembayaran->status_pembayaran == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
                                                     <option value="Diterima" {{ $pembayaran->status_pembayaran == 'Diterima' ? 'selected' : '' }}>Diterima</option>
                                                     <option value="Ditolak" {{ $pembayaran->status_pembayaran == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
                                                 </select>
-                                                <button type="submit">Simpan</button>
+                                                <button class="btn btn-primary" type="submit">Simpan</button>
                                             </form>
                                         </td>
                                     </tr>

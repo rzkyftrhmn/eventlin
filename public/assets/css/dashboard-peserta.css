@@ -88,7 +88,7 @@ body{
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 75vh;
+  height: 100vh;
   display: flex;
   align-items: center;       
   justify-content: center;   
@@ -104,6 +104,44 @@ body{
 }
 
 /* card filter */
+.button-register button,
+.button-login button {
+  padding: 10px 20px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Daftar Sekarang */
+.button-register button {
+  background: linear-gradient(to right, #3b82f6, #60a5fa);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.button-register button:hover {
+  background: linear-gradient(to right, #2563eb, #3b82f6);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+}
+
+/* Login */
+.button-login button {
+  background-color: transparent;
+  border: 2px solid #3b82f6;
+  color: #3b82f6;
+}
+
+.button-login button:hover {
+  background-color: #3b82f6;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
+}
+
 .card-filter {
   display: flex;
   align-items: center;
@@ -192,6 +230,7 @@ body{
   position: relative;
   background-color: white;
   overflow: hidden;
+  padding: 50px;
 }
 
 .blur-svg {
@@ -250,6 +289,7 @@ body{
   transition: transform 0.2s ease;
   padding: 10px;
   margin-bottom: 18px;
+  width: 100%;
 }
 
 .card-event .img img {
@@ -322,7 +362,7 @@ body{
   border-radius: 25px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 40px;
-  width: 344px;
+  width: 100%;
   height: 300px;
   margin: auto;
   border: 3px solid #ffffff;
@@ -631,4 +671,214 @@ body{
     color: #ffffff;
     font-size: 18px;
     font-weight: 400;
+}
+
+.dashboard-peserta {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  margin-top: 30px;
+  transition: 0.3s ease-in-out;
+}
+
+/* Judul */
+.dashboard-peserta h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 20px;
+}
+
+/* Paragraf */
+.dashboard-peserta p {
+  font-size: 16px;
+  color: #374151;
+  margin-bottom: 10px;
+  position: relative;
+  padding-left: 28px;
+}
+
+/* Ikon hiasan */
+.dashboard-peserta p::before {
+  content: "📌";
+  position: absolute;
+  left: 0;
+  top: 1px;
+  font-size: 16px;
+}
+
+.card-pembayaran {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin-top: 30px;
+}
+
+.card-pembayaran h2 {
+  color: #1e3a8a;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.pembayaran-list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+
+.pembayaran-list li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #374151;
+}
+
+/* Notifikasi */
+.notif {
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+.notif.success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+.notif.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Status */
+.status {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.status-verified {
+  color: #10b981;
+}
+.status-pending {
+  color: #f59e0b;
+}
+
+/* Button */
+.btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s ease-in-out;
+}
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #1e40af;
+}
+.btn-warning {
+  background-color: #f59e0b;
+  color: white;
+}
+.btn-warning:hover {
+  background-color: #d97706;
+}
+
+/* Preview gambar */
+.bukti-preview img {
+  margin-top: 15px;
+  max-width: 200px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Text jika tidak berbayar */
+.no-payment {
+  font-style: italic;
+  color: #6b7280;
+}
+.btn-navbar-pembayaran {
+  background-color: #2563eb;        
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  margin-left: 12px;
+}
+
+.btn-navbar-pembayaran:hover {
+  background-color: #1d4ed8;        
+  color: #f1f5f9;
+}
+
+
+@media only screen and (min-width: 374px) and (max-width: 480px){
+  .eventln-nav{
+    display: none;
+  }
+  .section-hero h2{
+    font-size: 28px;
+  }
+  .title-section-event h3{
+    font-size: 28px;
+  }
+  .card-kebijakan{
+    margin-bottom: 25px;
+  }
+  .title-kebijakan{
+    font-size: 28px;
+  }
+  .event-section{
+    padding: 50px 0 50px 0;
+  }
+}
+
+/* HP umum (potrait) */
+@media only screen and (min-width: 480px) and (max-width: 768px){
+  .section-hero h2{
+    font-size: 33px;
+  }
+  .title-section-event h3{
+    font-size: 33px;
+  }
+  .card-kebijakan{
+    margin-bottom: 25px;
+  }
+  .eventln-nav{
+    display: none;
+  }
+  .title-kebijakan{
+    font-size: 33px;
+  }
+}
+
+/* Tablet (portrait) */
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+  .eventln-nav{
+    display: none;
+  }
+  .button-login{
+    margin: 0;
+    padding: 0;
+  }
+  .card-kebijakan{
+    margin-bottom: 25px;
+  }
+}
+
+/* Tablet (landscape) dan laptop kecil */
+@media only screen and (min-width: 993px) and (max-width: 1200px) {
+  .title-section-event h3 {
+    font-size: 38px;
+  }
+  .title-kebijakan{
+    font-size: 38px;
+  }
 }
